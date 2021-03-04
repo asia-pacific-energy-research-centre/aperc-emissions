@@ -126,5 +126,5 @@ dmypy.json
 
 # excell files 
 
-*.xlsx
-*.csv
+.xlsx
+.csv
