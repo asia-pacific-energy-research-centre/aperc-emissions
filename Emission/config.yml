@@ -1,0 +1,16 @@
+# Choose the sectors you want to run:
+FilePaths:
+### Demand sectors:
+    AGR: './data/data-sheet-agriculture.xlsx'
+    BLD: './data/data-sheet-buildings.xlsx'
+    IND: './data/data-sheet-industry.xlsx'
+    TRN: './data/data-sheet-transport.xlsx'
+    OWN: './data/data-sheet-ownuse.xlsx'
+    PIP: './data/data-sheet-pipeline transport.xlsx'
+    NON: './data/data-sheet-nonspecified.xlsx'
+
+Maping_File: "../../data/raw/IPCC Methodology to EGEDA map.xlsx"
+
+
+Output_location: './results/'
+    
