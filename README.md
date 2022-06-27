@@ -18,17 +18,15 @@ the latest EGEDA data, named like so: "../input_data/EGEDA_{}_items.csv".format(
    
 **IPCC Methodology to EGEDA map.xlsx** sheets are as follows:
 
-==========================================================================================
 
-**USED:**
+_**USED:**_
 
 **emissions factors** = same as sheet above but in Default Carbon content(kg/GJ), so THIS IS USED IN THE MAIN PROCESS as "carbon content values from the IPCC"
 
 **MAP**  = a mapping between IPCC and EGEDA categories
 
-==========================================================================================
 
-**NOT USED:**
+_**NOT USED:**_
 
 **Default NCV** = Default net calorific values (NCVs) (TJ/Gg) and lower and upper limits of the 95% confidence interval (not used yet)
     
@@ -36,9 +34,7 @@ the latest EGEDA data, named like so: "../input_data/EGEDA_{}_items.csv".format(
     
 **EGEDA** = a mapping too (i think), but not used
 
-==========================================================================================
-
-**Config/Archive/:**
+_**Config/Archive/:**_
 
 **Emissions_factors.csv** = We also have emissions factors in Emission Factor(Mt_CO2/PJ) here for all APEC economies and fuel types based on EGEDA fuel type categories. This isn;t used for anything yet but could be helpful perhaps
     
