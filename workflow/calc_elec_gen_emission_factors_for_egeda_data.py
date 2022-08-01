@@ -16,10 +16,10 @@ execfile("../config/config.py")#usae this to load libraries and set variables. F
 # eg. 01_Aus, 2011, 7_8_fuel_oil, 0.0  #this is the fuel oil input data
 
 energy_data_file = '../../utility_data/00APEC_FUELSUMSREMOVED.xlsx'#CHANGE ME. 
-emissions_factors_file = 'IPCC_emissions_factors.csv'#CHANGE ME.
+emissions_factors_file = '00APEC_emissions_factors.csv'#CHANGE ME.
 #%%
 #LOAD
-emissions_factors = pd.read_csv('{}/00APEC_emissions_factors.csv'.format(output_data_path, emissions_factors_file))
+emissions_factors = pd.read_csv('{}/{}'.format(output_data_path, emissions_factors_file))
 # energy_data = pd.read_excel('{}/{}'.format(input_data_path, energy_data_file))
 
 #%%
@@ -54,7 +54,8 @@ for sheet in pd.ExcelFile(energy_data_file).sheet_names:
     list_2 = emissions_factors['Fuel'].unique()
     list_1 = APEC_input_energy_data['Fuel'].unique()
     missing_codes_list = [x for set_1 in (set(list_2),) for x in list_1 if x not in set_1]
-    print("These fuel codes are in the energy data set for sheet {} but arent in the emissions factors set. You will need to do somethig about them: ".format(sheet), missing_codes_list)
+    if len(missing_codes_list)>0:
+        print("These fuel codes are in the energy data set for sheet {} but arent in the emissions factors set. You will need to do somethig about them: ".format(sheet), missing_codes_list)
 
     #%%
     #merge input data with emission factors  
@@ -78,11 +79,30 @@ for sheet in pd.ExcelFile(energy_data_file).sheet_names:
 
     generation_emissions_dtf = pd.concat([generation_emissions_dtf, APEC_output_energy_data], axis=0)
     
+#%%
 
- 
+#join emissions factors to the newly calculated generation data
+#load
+#create a copy of the emissions factors foir each economy and year in gen_factors (which is every economy year combination in the 00_APEC dataset) then concat the two dataframes. this will make it so we ahve a set of emission factors for each eocnomy and year in the apec data so we can calculate the emissions for each economy easily, given that the emissions factors for elec use is different wfor eadch economy.
+dummy_df = generation_emissions_dtf[['Economy', 'Year']].drop_duplicates()
+
+emissions_factors['dummy'] = 1
+dummy_df['dummy'] = 1
+
+apec_factors_2 = dummy_df.merge(emissions_factors, on='dummy')#
+
+apec_factors_2.drop(['dummy'], axis=1, inplace=True)
+
+#concatenate gen and emissionfactors
+large_emissions_factors_df = pd.concat([generation_emissions_dtf, apec_factors_2], axis=0)
+
+
 #%%
 #SAVE
 generation_emissions_dtf.to_csv('{}/egeda_generation_emissions_factors.csv'.format(output_data_path), index=False)
 
+large_emissions_factors_df.to_csv('{}/egeda_all_emissions_factors.csv'.format(output_data_path), index=False)
+
+#%%
 #wish list, example using 8th edition data as inpt *would require using finns transport scripts that take in data from 8th edition charts outputs, change it to take in data from sheets for 'Power Fuel Consumption' and then format. 
 # %%
