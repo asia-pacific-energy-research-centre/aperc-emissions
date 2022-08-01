@@ -134,3 +134,53 @@ emmsion_factoers = emmsion_factoers.dropna()
 emmsion_factoers.to_csv("../intermediate_data/emmsion_factoers.csv")
 
 #%%
+
+
+x = ['15_1_fuelwood_and_woodwaste', '15_3_charcoal',
+       '15_4_black_liquor', '15_5_other_biomass', '16_1_biogas',
+       '16_2_industrial_waste', '16_3_municipal_solid_waste_renewable',
+       '16_4_municipal_solid_waste_nonrenewable', '16_5_biogasoline',
+       '16_6_biodiesel', '16_8_other_liquid_biofuels', '1_1_coking_coal',
+       '1_2_other_bituminous_coal', '1_3_subbituminous_coal',
+       '1_4_anthracite', '1_5_lignite', '2_1_coke_oven_coke',
+       '2_2_coke_oven_gas', '2_3_blast_furnace_gas',
+       '2_4_other_recovered_gases', '2_5_patent_fuel', '2_6_coal_tar',
+       '2_7_bkb_pb', '3_peat', '4_peat_products',
+       '5_oil_shale_and_oil_sands', '6_1_crude_oil',
+       '6_2_natural_gas_liquids', '6_3_refinery_feedstocks',
+       '6_4_additives_oxygenates', '6_5_other_hydrocarbons',
+       '7_10_refinery_gas_not_liquefied', '7_11_ethane',
+       '7_12_white_spirit_sbp', '7_13_lubricants', '7_14_bitumen',
+       '7_15_paraffin_waxes', '7_16_petroleum_coke',
+       '7_17_other_products', '7_1_motor_gasoline',
+       '7_2_aviation_gasoline', '7_3_naphtha',
+       '7_4_gasoline_type_jet_fuel', '7_5_kerosene_type_jet_fuel',
+       '7_6_kerosene', '7_7_gas_diesel_oil', '7_8_fuel_oil', '7_9_lpg',
+       '8_1_natural_gas', '8_2_lng', '8_3_gas_works_gas']
+
+
+y = ['6_1_crude_oil', '6_2_natural_gas_liquids', '7_1_motor_gasoline',
+       '7_2_aviation_gasoline', '7_4_gasoline_type_jet_fuel',
+       '7_5_kerosene_type_jet_fuel', '7_6_kerosene',
+       '5_oil_shale_and_oil_sands', '7_7_gas_diesel_oil', '7_8_fuel_oil',
+       '7_9_lpg', '7_11_ethane', '7_3_naphtha', '7_14_bitumen',
+       '7_13_lubricants', '7_16_petroleum_coke',
+       '6_3_refinery_feedstocks', '7_10_refinery_gas_not_liquefied',
+       '7_15_paraffin_waxes', '7_12_white_spirit_sbp',
+       '7_17_other_products', '1_4_anthracite', '1_1_coking_coal',
+       '1_2_other_bituminous_coal', '1_3_subbituminous_coal',
+       '1_5_lignite', '2_7_bkb_pb', '2_5_patent_fuel',
+       '2_1_coke_oven_coke', '2_6_coal_tar', '8_3_gas_works_gas',
+       '2_2_coke_oven_gas', '2_3_blast_furnace_gas',
+       '2_4_other_recovered_gases', '8_1_natural_gas',
+       '16_4_municipal_solid_waste_nonrenewable', '16_2_industrial_waste',
+       '3_peat', '15_1_fuelwood_and_woodwaste', '15_4_black_liquor',
+       '15_5_other_biomass', '15_3_charcoal', '16_5_biogasoline',
+       '16_6_biodiesel', '16_8_other_liquid_biofuels', '16_1_biogas',
+       '16_3_municipal_solid_waste_renewable', '6_4_additives_oxygenates',
+       '6_5_other_hydrocarbons', '8_2_lng', '4_peat_products']
+
+main_list = [x for set_1 in (set(list_1),) for x in list_2 if x not in set_1]
+main_list
+
+#%%

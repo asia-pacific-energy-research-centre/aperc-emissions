@@ -128,3 +128,5 @@ dmypy.json
 
 *.xlsx
 *.csv
+#except any files in config folder
+!config/*

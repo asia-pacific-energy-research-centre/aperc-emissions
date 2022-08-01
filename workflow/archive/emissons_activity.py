@@ -87,13 +87,17 @@ all_cols = start_cols + end_cols
 # %%
 def demand_emissions(df_data_sheet,Emission_map):
     df_EmissionActivityRatio = df_data_sheet.merge(right = Emission_map, left_on= "FUEL", right_index=True)
+
     df_EmissionActivityRatio.iloc[:,6:-1] = df_EmissionActivityRatio.iloc[:,6:-1].mul(df_EmissionActivityRatio.loc[:,"Carbon content(kg/GJ)"],axis =0 ) *1000
+
     df_EmissionActivityRatio = df_EmissionActivityRatio.set_index("REGION","TECHNOLOGY","FUEL").groupby(["REGION","TECHNOLOGY"]).sum()
+
     df_EmissionActivityRatio = df_EmissionActivityRatio.reset_index()
     df_EmissionActivityRatio["MODE_OF_OPERATION"] = 1
     df_EmissionActivityRatio["UNITS"] = np.nan
     df_EmissionActivityRatio["NOTES"] = np.nan
     df_EmissionActivityRatio["EMISSION"] = "CO2"
+    
     return df_EmissionActivityRatio
 
 
