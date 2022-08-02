@@ -130,3 +130,5 @@ dmypy.json
 *.csv
 #except any files in config folder
 !config/*
+#and this file
+!input_data/00APEC_FUELSUMSREMOVED.xlsx
