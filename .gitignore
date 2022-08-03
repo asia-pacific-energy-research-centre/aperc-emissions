@@ -130,5 +130,9 @@ dmypy.json
 *.csv
 #except any files in config folder
 !config/*
+#keep these output files so the user doesnt always need to run the library when they need the output
+!output/00APEC_emissions_factors.xlsx
+!output/egeda_all_emissions_factors
+!output/egeda_generation_emissions_factors
 #and this file
 !input_data/00APEC_FUELSUMSREMOVED.xlsx
