@@ -1,10 +1,9 @@
-## This will produce the emission factors for energy categories used in APERC energy datasets. 
+## The tool is focused on helping you to map emission factors to new fuel types you may have.
 
-- **If the user just wants emissions factors for the standard APEC set of fuel categories, they can just run 'emissions_factors_for_egeda_data.py' and use the output**
-
-- **This library is also set up for someone to create emissions factors if they have a different set of fuel categories than the standard APEC set**. They would just create a copy of the workflow/emissions_factors_for_egeda_data.py file and edit the variables in there, then in a new sheet in config/emissions_to_energy_mappings.xlsx create a mapping from the emissions factors fuel codes in config/emission_factors.xlsx they want, and their unique energy fuel codes.
-
-- There is also a file to create **generation emissions factors** from the egeda data. This can also be easily edited to make it work for your own situation.
+- It does this by providing code to create emission factors for energy categories used in the main APERC energy dataset. This code is intended to be able to be replicated for other datasets. 
+- If a new energy dataset uses different fuel type codes, then a space for creating the mapping between those fuel codes and the emissions factors is provided in config/emissions_to_energy_mappings.xlsx
+- Emission factors can also be updated in config/emission_factors.xlsx. 
+- There is also a file to create **generation emissions factors** from the egeda data. This can also be easily edited to make it work for your own dataset.
 
 # **The key files used are:**
 #### Config/:
@@ -14,6 +13,7 @@
 #### Output_data/:
 - output_data/00APEC_emissions_factors.csv
 - output_data/egeda_generation_emissions_factors.csv
+- output_data/egeda_all_emissions_factors.csv - a combination of the above two csv's
 
 #### Input_data/:
 - input_data/00APEC_FUELSUMSREMOVED.xlsx - used in calculating generation emissions factors

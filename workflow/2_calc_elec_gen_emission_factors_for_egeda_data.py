@@ -80,6 +80,10 @@ for sheet in pd.ExcelFile(energy_data_file).sheet_names:
     APEC_output_energy_data['Fuel'] = '17 Electricity'
     APEC_output_energy_data = APEC_output_energy_data[['Economy', 'Year', 'Fuel', 'Emissions factor (MT/PJ)']]
 
+    #where we have a 0 or NA value, remove the row as it is more misleading than useful (the user may end up asuming that htat years ef is 0, rather than the fact that there was no elec data in that year)
+    APEC_output_energy_data = APEC_output_energy_data[APEC_output_energy_data['Emissions factor (MT/PJ)']!=0]
+    APEC_output_energy_data = APEC_output_energy_data.dropna()
+
     generation_emissions_dtf = pd.concat([generation_emissions_dtf, APEC_output_energy_data], axis=0)
 
 #%%
