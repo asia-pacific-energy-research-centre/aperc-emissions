@@ -35,7 +35,7 @@ If you have any querys or improvements to suggest please feel free to contact th
 
 Examples of improvements that may be useful if you raise them:
 
--output of emissions factors fuel types in the Xth edition outlook (eg. one fuel type for gasoline and kerosene jet fuel, a 0 for hydrogen emissions etc)
--estimation of hydrogen emission factors
--ability to calculate emissions given an input energy dataset
--graphs
+- output of emissions factors fuel types in the Xth edition outlook (eg. one fuel type for gasoline and kerosene jet fuel, a 0 for hydrogen emissions etc)
+- estimation of hydrogen emission factors
+- ability to calculate emissions given an input energy dataset
+- graphs
