@@ -19,7 +19,7 @@ emissions_factors = pd.read_csv('{}/{}'.format(output_data_path, '00APEC_emissio
 transport_energy = pd.read_csv('../../aperc_transport/output_data/00APEC_transport.csv')
 
 #%%
-#first get transport emisison factors from full set of emission factors 
+#first, get transport emisison factors from full set of emission factors. The process wil first complete the mapping to IPCC fuel names/codes, then use this to retrieve the emissions factors that are neeeded  
 
 #to retrieve from emission factrors in the output apec datafra,me we need similar fuel codes. So we map to the apec fuel code mapping using transport 8th mapping then apec mapping to eventually get the emissions factrrors with the same fuel codes as are used in transport 8th
 transport_8th_mapping = transport_8th_mapping.merge(apec_mapping, on = 'IPCC_emission_factors_2021_fuel', how = 'left')

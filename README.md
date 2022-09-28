@@ -5,6 +5,9 @@
 - Emission factors can also be updated in config/emission_factors.xlsx. 
 - There is also a file to create **generation emissions factors** from the egeda data. This can also be easily edited to make it work for your own dataset.
 
+PLEASE NOTE
+This is not intended to calcualte emissions for your dataset of energy use. You can do that yourself using merge once you have created the emissions factors in this tool. 
+
 # **The key files used are:**
 #### Config/:
 - config/emission_factors.xlsx - this contains emissions factors. It can be added to by the user if need be.
