@@ -1,3 +1,19 @@
+## SETUP
+There are two options for environments. They depend if you want to use jupyter or just the command line to run the model. I prefer to use jupyter but i know that it takes a lot of space/set-up-time.
+ - config/env_jupyter.yml
+ - config/env_no_jupyter.yml
+
+run:
+conda env create --prefix ./env_jupyter --file ./config/env_jupyter.yml
+
+Then:
+conda activate ./env_jupyter
+
+Note that installing those libraries in the yml files will result in a few other dependencies also being installed.
+
+
+
+
 ## The tool is focused on helping you to map emission factors to new fuel types you may have.
 
 - It does this by providing code to create emission factors for energy categories used in the main APERC energy dataset. This code is intended to be able to be replicated for other datasets. 
