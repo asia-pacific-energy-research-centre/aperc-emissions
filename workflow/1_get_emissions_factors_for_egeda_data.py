@@ -11,11 +11,11 @@ execfile("../config/config.py")#usae this to load libraries and set variables. F
 
 #%%
 #CHANGE ME ACCORDING TO WHAT EMISSIONS FACTORS AND MAPPINGS YOU WANT TO USE
-mapping_sheet = "00APEC_map"
+mapping_sheet = 'outlook_9th'#"00APEC_map"
 
 emission_factors_sheet ="IPCC Emission Factors 2021"
 
-output_sheet = "00APEC_emissions_factors.csv"
+output_sheet = "9th_edition_emissions_factors.csv"
 #%%
 #LOAD
 #TRY TO KEEP THIS CELL THE SAME
@@ -32,8 +32,9 @@ emission_factors['IPCC_emission_factors_2021_fuel'] = emission_factors['Fuel typ
 
 IPCC_carbon_content = mapping.merge(emission_factors, left_on="IPCC_emission_factors_2021_fuel", right_on="IPCC_emission_factors_2021_fuel", how='inner')
 
-#filter only for the columns we want to use:
-IPCC_carbon_content = IPCC_carbon_content[["00_APEC_fuel_code", "IPCC_emission_factors_2021_fuel", "Default Carbon content(kg/GJ)", "IPCC_Account"]]
+if "IPCC_Account" not in IPCC_carbon_content.columns:#if the IPCC account column is not in the mapping sheet, add it in. this is used to 
+    raise Exception("IPCC_Account column not in mapping sheet. Please add it in and try again")
+
 #print rows with NA's in the data for user visibility of potential emission factor fuel types that are being missed out
 print('Here are the fuel codes with missing mappings. You may want to sort them out if they are fuel codes from the energy data, missing fuel codes in the emission factors:\n\n', IPCC_carbon_content[IPCC_carbon_content.isnull().any(axis=1)])
 
@@ -45,7 +46,7 @@ print('Here are the fuel codes with missing mappings. You may want to sort them 
 IPCC_carbon_content = IPCC_carbon_content.dropna()
 
 #set index
-IPCC_carbon_content= IPCC_carbon_content.set_index(['00_APEC_fuel_code','IPCC_Account'])
+IPCC_carbon_content= IPCC_carbon_content.set_index(['fuel_code','IPCC_Account'])
 
 IPCC_carbon_content.loc[pd.IndexSlice[:,"LULUCF"],:] = 0#set all LULUCF based emissions from df to 0 for simplicity. its arguable that these renewable fuel types have 0 emissions
 
