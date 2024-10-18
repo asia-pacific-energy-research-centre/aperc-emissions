@@ -16,6 +16,7 @@ Note that installing those libraries in the yml files will result in a few other
 on 10/17/2024 i updated this to use a new method incorporating a direct downlaod form the unfcc website https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 and mapping all of the 9th edition sector/fuel combinations to the no2, ch4 and co2 emissions factors. This involved a lot of chatgpt assisted mapping. It is a big change. Imprves the quality of our mappings as well as providing a more comprehensive set of emissions factors. However it is now a little messy and involved. If you have new combaintions of fuels/sectors then you will have to learn how the new scripts worked, sorry!
 
 
+<<<<<<< HEAD
 
 
 
@@ -29,6 +30,9 @@ on 10/17/2024 i updated this to use a new method incorporating a direct downlaod
 
 
 
+=======
+# Please note that the below info is partly irrelevant now *as in dont bother reading it*
+>>>>>>> b7f7600486e81fc424c8e17a462d0e058e364ab4
 
 ## The tool is focused on helping you to map emission factors to new fuel types you may have.
 
