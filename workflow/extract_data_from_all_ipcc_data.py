@@ -9,8 +9,7 @@ from datetime import datetime
 import shutil
 model_df_wide_original = pd.read_csv('../input_data/model_df_wide_tgt_20241018.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
-
-gwp_dict = {'CO2': 1, 'CH4': 32, 'N2O': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
+gwp_dict = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
 #then print all the unique values in the IPCC 2006 Source/Sink Category column and map them to all the unique vategories in the model_df_wide['sectors'] column < we might ahve to create a concat of all the subsectors columns in mdoel_df_wide to get more precise mappings
 #%%
 
