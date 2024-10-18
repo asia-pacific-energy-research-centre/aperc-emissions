@@ -1,31 +1,17 @@
 #this is the finalised version for extracting data from the ipcc full dataset on energy emission factors. We had a much more messy script before, but this is a bit nicer ..  although nothing that i would want to show off to anyone!
-#chances are that the process is still valid a few years after this was produced - i dont see us changing the way we strucutre our outlook data, but we very likely will have new sectors and fuel combinations. So you will need to run this again and check the outputs so taht you can update the mappings. -  also update the gwp's and emissions factors inputs if this is a while aftr 10/17/2024 - they might have been updated.
-#also please note that the config/aperc_to_ipcc_sector_mappings.xlsx file is an input for this script. it contains all the mappings that i used to get the data from chatgpt usign prompts generated in this script. 
+#chances are that the process is still valid - i dont see us changing the way we strucutre our outlook data, but we very likely will have new sectors and fuel combinations. So you will need to run this again and check the outputs so taht you can update the mappings. -  also update the gwp's and emissions factors inputs if this is a while aftr 10/17/2024 - they might have been updated.
+#also please note that the gpt_prompts_extract_data_from_all_ipcc_data.py file is not really a script but an input for this script. it contains all the prompts and mappings that i used to get the data from chatgpt. i have left it in here so that you can see what i did, as wella s import and udpate the mappings when you need to.
 #%%
 import pandas as pd
 import numpy as np
 import os
-from datetime import datetime
-import shutil
 model_df_wide_original = pd.read_csv('../input_data/model_df_wide_tgt_20241018.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
 
 gwp_dict = {'CO2': 1, 'CH4': 32, 'N2O': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
 #then print all the unique values in the IPCC 2006 Source/Sink Category column and map them to all the unique vategories in the model_df_wide['sectors'] column < we might ahve to create a concat of all the subsectors columns in mdoel_df_wide to get more precise mappings
 #%%
-
-mappings_file_path = '../config/aperc_to_ipcc_sector_mappings.xlsx'
-def archive_mappings(file_path, archive_folder='../config/archive/'):
-    if not os.path.exists(archive_folder):
-        os.makedirs(archive_folder)
-    date_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-    archive_file_path = os.path.join(archive_folder, f"aperc_to_ipcc_sector_mappings_{date_id}.xlsx")
-    shutil.copy2(file_path, archive_file_path)
-    print(f"Archived mappings to {archive_file_path}")
-archive_mappings(mappings_file_path)
-
 #%%
-
 ############################
 #firrst set up the model_df_wide df to make it easier to work with:
 ############################
@@ -251,76 +237,32 @@ other = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Sou
 completed_sectors =aperc_transformation_combinations + aperc_transport_combinations + ['16_other_sector$16_01_buildings$16_01_02_residential$x'] + aperc_industry_combinations + services_sectors
 other_aperc_combinations = [sector for sector in aperc_sectors if sector not in completed_sectors]
 other_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(other_aperc_combinations)][['aperc_sector', 'aperc_fuel']].drop_duplicates()
+#%%
+#print them out and chatgpt can help us map them:
+#please note that iu had a whole lot of cahtgpt prompts and mappings here but i moved them to gpt_prompts.py
+import gpt_prompts_extract_data_from_all_ipcc_data as gpt_prompts
+transport_mapping =gpt_prompts.transport_mapping
+residential_mapping = gpt_prompts.residential_mapping
+industry_mapping = gpt_prompts.industry_mapping
+services_mappings = gpt_prompts.services_mappings
+transformation_mappings = gpt_prompts.transformation_mappings
+other_mappings = gpt_prompts.other_mappings
 
 #%%
-# Load the mappings from an Excel file where each sector is in a separate sheet
-def load_mappings_from_excel(file_path):
-    # Read all sheets into a dictionary of DataFrames
-    xls = pd.ExcelFile(file_path)
-    mapping_dfs = {sheet_name: xls.parse(sheet_name) for sheet_name in xls.sheet_names}
-    return mapping_dfs
+#create a df from the mapping and then check that it maps correctly to the model_df_wide_simplified and emissions factors:
 
-# Save the original mappings to an Excel file
-def save_mappings_to_excel(mappings, file_path):
-    with pd.ExcelWriter(file_path) as writer:
-        for sector, mapping in mappings.items():
-            mapping.to_excel(writer, sheet_name=sector, index=False)
-
-# Remove mappings that are not needed from the Excel file
-def remove_not_needed_mappings(file_path, not_needed_df, sector):
-    # Load the mappings from the Excel file
-    mappings = load_mappings_from_excel(file_path)
-    
-    # Filter out the not needed mappings
-    mapping_df = mappings[sector]
-    filtered_mapping_df = mapping_df.loc[~mapping_df[['aperc_sector', 'aperc_fuel']].isin(not_needed_df[['aperc_sector', 'aperc_fuel']]).all(axis=1)]
-    
-    # Save the updated mappings back to the Excel file
-    mappings[sector] = filtered_mapping_df
-    save_mappings_to_excel(mappings, file_path)
-#%%
-#this was part of switch form the old to the new mapping system. we dont need it now
-# DO_THIS = False 
-# if DO_THIS:
-#     import gpt_prompts_extract_data_from_all_ipcc_data as gpt_prompts
-#     transport_mapping =gpt_prompts.transport_mapping
-#     residential_mapping = gpt_prompts.residential_mapping
-#     industry_mapping = gpt_prompts.industry_mapping
-#     services_mapping = gpt_prompts.services_mapping
-#     transformation_mapping = gpt_prompts.transformation_mapping
-#     other_mapping = gpt_prompts.other_mapping
-#     original_mappings = {
-#         'transport': transport_mapping,
-#         'residential': residential_mapping,
-#         'industry': industry_mapping,
-#         'services': services_mapping,
-#         'transformation': transformation_mapping,
-#         'other': other_mapping
-#     }
-
-#     save_mappings_to_excel(original_mappings, mappings_file_path)
-#%%
-# Load the mappings from the saved Excel file
-mappings = load_mappings_from_excel(mappings_file_path)
-
-# Assuming the Excel sheets are named 'transport', 'residential', 'industry', 'services', 'transformation', 'other'
-transport_mapping = mappings['transport']
-residential_mapping = mappings['residential']
-industry_mapping = mappings['industry']
-services_mapping = mappings['services']
-transformation_mapping = mappings['transformation']
-other_mapping = mappings['other']
-#%%
-# Update your map_sectors function to work with DataFrames directly instead of dictionaries
 def map_sectors(mapping_df, emissions_factors_df, default_sector="1.A.1 - Energy Industries"):
-    # Assuming mapping_df already has the columns: 'aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel'
-    # Check for duplicates
-    duplicates = mapping_df.loc[mapping_df.duplicated()]
+    # Create a DataFrame from the mapping and then check that it maps correctly to the emissions factors
+    new_mapping = pd.DataFrame(mapping_df).T.reset_index()
+    new_mapping.columns = ['aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel']
+
+    #check for duplicates
+    duplicates = new_mapping.loc[new_mapping.duplicated()]
     if len(duplicates) > 0:
         print('Please remove these duplicates from the mapping: {}'.format(duplicates))
         
     # Join to emissions factor to check that these combinations do exist
-    mapping_test = pd.merge(mapping_df, emissions_factors_df, how='left', 
+    mapping_test = pd.merge(new_mapping, emissions_factors_df, how='left', 
                             left_on=['ipcc_sector', 'ipcc_fuel'], 
                             right_on=['IPCC 2006 Source/Sink Category', 'Fuel 2006'], 
                             indicator=True)
@@ -330,10 +272,15 @@ def map_sectors(mapping_df, emissions_factors_df, default_sector="1.A.1 - Energy
     print('Remapping the following sectors to the default sector:')
     print(left_onlys[['aperc_sector', 'aperc_fuel']])
     
-    # Replace their sector with the default sector
+    # #find where ipcc sectpr is "1.A.3.a - International Aviation" and ipcc fuel is "Aviation Gasoline"
+    # a = mapping_test.loc[(mapping_test['ipcc_sector'] == '1.A.3.a - International Aviation') & (mapping_test['ipcc_fuel'] == 'Aviation Gasoline')]
+    # if len(a) > 0:
+    #     breakpoint()
+    # Try replace their sector with the default sector
     left_onlys['ipcc_sector'] = default_sector
     
     mapping_test = mapping_test.loc[mapping_test['_merge'] == 'both']
+
     mapping_test = pd.concat([mapping_test, left_onlys])
     
     # Keep only the original columns
@@ -345,116 +292,115 @@ def map_sectors(mapping_df, emissions_factors_df, default_sector="1.A.1 - Energy
                             right_on=['IPCC 2006 Source/Sink Category', 'Fuel 2006'], 
                             indicator=True)
     
-    # Check for duplicates:
+    #check for duplicates:
     duplicates = mapping_test.loc[mapping_test.duplicated()]
     if len(duplicates) > 0:
-        print(f"Warning: {len(duplicates)} duplicates in the aperc_sector\taperc_fuel columns")
+        print(f"Warning: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns")
     
     left_onlys = mapping_test[mapping_test['_merge'] == 'left_only']
     if len(left_onlys) > 0:
         print(f"Warning: {len(left_onlys)} combinations are still missing from the emissions factors")
     return mapping_test, left_onlys
-
-# Example of calling the updated function
+#%%
 results_transport, left_onlys_transport = map_sectors(transport_mapping, new_emissions_factors_ipcc)
 results_residential, left_onlys_residential = map_sectors(residential_mapping, new_emissions_factors_ipcc)
-results_industry, left_onlys_industry = map_sectors(industry_mapping, new_emissions_factors_ipcc)
-results_services, left_onlys_services = map_sectors(services_mapping, new_emissions_factors_ipcc)
-results_transformation, left_onlys_transformation = map_sectors(transformation_mapping, new_emissions_factors_ipcc)
-results_other, left_onlys_other = map_sectors(other_mapping, new_emissions_factors_ipcc)
 #%%
-# Function to check missing sectors against the model combinations
+results_industry, left_onlys_industry = map_sectors(industry_mapping, new_emissions_factors_ipcc)
+
+results_services, left_onlys_services = map_sectors(services_mappings, new_emissions_factors_ipcc)
+
+results_transformation, left_onlys_transformation = map_sectors(transformation_mappings, new_emissions_factors_ipcc)
+#%%
+results_other, left_onlys_other = map_sectors(other_mappings, new_emissions_factors_ipcc)
+#%%
+#also create something that will check the mappings for missing sectors. i.e. check industry mapping for missing aperc_sector aperc_fuel combinations in industry_combinations_model
 def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector):
+    
+    mapping_df = pd.DataFrame(mapping_df).T.reset_index()
+    mapping_df.columns = ['aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel']
     mapping_sectors_fuel_combos = mapping_df[[sector_col, fuel_col]].drop_duplicates()
     model_sectors_fuel_combos = model_df[[sector_col, fuel_col]].drop_duplicates()
-    
-    # Merge them
+    # breakpoint()
+    #merege them
     combos_merged = pd.merge(mapping_sectors_fuel_combos, model_sectors_fuel_combos, on=[sector_col, fuel_col], indicator=True, how='outer')
-    
-    # Extract non-both rows
-    missing_from_mapping = combos_merged.loc[combos_merged['_merge'] == 'right_only']
+    #extract non both rows
+    missing_from_mapping = combos_merged.loc[combos_merged['_merge']=='right_only']
     if len(missing_from_mapping) > 0:
-        print(f"Warning: for {sector}, {len(missing_from_mapping)} mapping combinations are still missing and need to be mapped\n")
-    not_needed_in_mapping = combos_merged.loc[combos_merged['_merge'] == 'left_only']
+        print(f"Warning: for {sector} {len(missing_from_mapping)} mapping combinations are still missing and need to be mapped\n")
+    not_needed_in_mapping =  combos_merged.loc[combos_merged['_merge']=='left_only']
     if len(not_needed_in_mapping) > 0:
-        print(f"Warning: for {sector}, {len(not_needed_in_mapping)} mapping combinations are not in the model and need to be removed from the mapping\n")
+        print(f"Warning: for {sector} {len(not_needed_in_mapping)} mapping combinations are not in the model and need to be removed from the mapping\n")
     return missing_from_mapping, not_needed_in_mapping
-
-#%%
+    
 missing_from_mapping_industry, not_needed_in_mapping_industry = check_missing_sectors(industry_mapping, industry_combinations_model, 'aperc_sector', 'aperc_fuel', 'industry')
 
-missing_from_mapping_services, not_needed_in_mapping_services= check_missing_sectors(services_mapping, services_combinations_model, 'aperc_sector', 'aperc_fuel', 'services')
+missing_from_mapping_services, not_needed_in_mapping_services= check_missing_sectors(services_mappings, services_combinations_model, 'aperc_sector', 'aperc_fuel', 'services')
 
-missing_from_mapping_transformation, not_needed_in_mapping_transformation= check_missing_sectors(transformation_mapping, transformation_combinations_model, 'aperc_sector', 'aperc_fuel', 'transformation')
+missing_from_mapping_transformation, not_needed_in_mapping_transformation= check_missing_sectors(transformation_mappings, transformation_combinations_model, 'aperc_sector', 'aperc_fuel', 'transformation')
 
-missing_from_mapping_other, not_needed_in_mapping_other= check_missing_sectors(other_mapping, other_combinations_model, 'aperc_sector', 'aperc_fuel', 'other')
+missing_from_mapping_other, not_needed_in_mapping_other= check_missing_sectors(other_mappings, other_combinations_model, 'aperc_sector', 'aperc_fuel', 'other')
 
 
 missing_from_mapping_residential, not_needed_in_mapping_residential= check_missing_sectors(residential_mapping, residential_combinations_model, 'aperc_sector', 'aperc_fuel', 'residential')
 
 missing_from_mapping_transport, not_needed_in_mapping_transport= check_missing_sectors(transport_mapping, transport_combinations_model, 'aperc_sector', 'aperc_fuel', 'other')
 
+# #create method to remove the not needed mappings from the mapping dictionary in gp_prompts.py:
+# def remove_not_needed_mappings(mapping_df, not_needed_df):
+#     #go into the gpt_prompts_extract_data_from_all_ipcc_data.py file and remove the not needed mappings by finding them by the aperc_sector and aperc_fuel with the kind of format ('16_other_sector$16_01_buildings$16_01_02_residential$x', '01_coal$01_01_coking_coal'): ('1.A.4.b - Residential', 'Coking Coal')
+
+#     mapping_df = pd.DataFrame(mapping_df).T.reset_index()
+#     mapping_df.columns = ['aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel']
+#     not_needed_df = not_needed_df[[ 'aperc_sector', 'aperc_fuel']]
+#     mapping_df = mapping_df.loc[~mapping_df[['aperc_sector', 'aperc_fuel']].isin(not_needed_df[['aperc_sector', 'aperc_fuel']])]
+#     return mapping_df
 #%%
-DO_THIS = True
-if DO_THIS:
-    #since we are updating the mappings then archive them too
-    archive_mappings(mappings_file_path)
-    
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_industry, 'industry')
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_services, 'services')
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_residential, 'residential')
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_transport, 'transport')
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_transformation, 'transformation')
-    remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_other, 'other')
-#%%
-# Function to create prompts for missing sector and fuel combinations
-def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col, original_combinations_df, industry_tag):
-    # Create a prompt for ChatGPT to provide new mappings in a format that can be entered directly into the Excel file
-    prompt = "Please provide the most likely IPCC 2006 Source/Sink Category and Fuel 2006 combinations for the aperc_sector and aperc_fuel combinations and put it in a tabular format that can be directly entered into an Excel sheet. The columns should be: 'aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel'.\n"
+#create a funciton that will create the prompt to send to chatgpt to get the missing sectors and fuels:
+def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col, original_cominations_df, industry_tag):
+    #this will create a short prompt at the beginnign and then list the missing sectors and fuels followed by the original combinations that it needs to be mapped to.
+    prompt = "Please provide the most likely IPCC 2006 Source/Sink Category and Fuel 2006 combinations for the aperc_sector and aperc_fuel combinations and put it in a python dict with the aperc_sector and aperc_fuel combinations as the keys and the corresponding, most likely IPCC 2006 Source/Sink Category and Fuel 2006 combinations as the value. e.g.dict ={('16_other_sector$16_01_buildings$16_01_02_residential$x', '01_coal$01_01_coking_coal'): ('1.A.4.b - Residential', 'Coking Coal')}.\n"
     if industry_tag != 'transformation':
-        prompt += f"(For the IPCC sector categories, try to prioritize mapping using the {industry_tag} related sectors rather than the 1.A.1 - Energy Industries sector.)\n"
+        prompt +="(for the IPCC sector categories try to prioritise mapping using the {0} related sectors rather than the 1.A.1 - Energy Industries sector):\n".format(industry_tag)
     else:
-        prompt += f"(For the IPCC sector categories, try to prioritize mapping using the 1.A - Fuel Combustion Activities sector.)\n"
+        prompt +=f"(for the IPCC sector categories try to prioritise mapping using the 1.A - Fuel Combustion Activities sector):\n"
+    prompt += "Please dont skip any combinations, and if you do please tell me"
     prompt += "The following aperc_sector and aperc_fuel combinations are missing from the model:\n"
+    
     prompt += missing_sectors_df[[sector_col, fuel_col]].to_string(index=False)
-    prompt += "\n\nThese need to be mapped to IPCC 2006 Source/Sink Category and Fuel 2006 combinations. These combinations are:\n"
-    prompt += original_combinations_df.to_string(index=False)
-    prompt += "\n\nPlease provide the mappings in a tabular format  so that each entry is separated by a tab so that it can be directly pasted into an Excel sheet with the columns as described above."
+    
+    prompt += "\n\nThese need to be mapped to the following IPCC 2006 Source/Sink Category and Fuel 2006 combinations:\n"
+    prompt += original_cominations_df.to_string(index=False)
     
     return prompt
-
-
+    
+#%%
 #basically just print these out individaully and input them to chatgpt then extract the dict output and put it in the mappings in the gpt_prompts.py file. no doubt chatgpt will miss ome so we will need to do this a few times and potentially fix some of the mappings manually.
 if len(missing_from_mapping_industry) > 0:
     industry_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_industry, 'aperc_sector', 'aperc_fuel', industry_combinations, 'industry')
     print(industry_prompt)
     print('\n\n')
-#%%
 if len(missing_from_mapping_services) > 0:
     services_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_services, 'aperc_sector', 'aperc_fuel', services_combinations, 'services')
     print(services_prompt)
     print('\n\n')
-#%%
 if len(missing_from_mapping_transformation) > 0:
     transformation_prompt = create_missing_sectors_fuel_prompts(
     missing_from_mapping_transformation, 'aperc_sector', 'aperc_fuel', transformation, 'transformation')
     print(transformation_prompt)
     print('\n\n')
-#%%
 if len(missing_from_mapping_other) > 0:
     other_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_other, 'aperc_sector', 'aperc_fuel', other, 'other')
     print(other_prompt)
     print('\n\n')
-#%%
 if len(missing_from_mapping_residential) > 0:
     residential_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_residential, 'aperc_sector', 'aperc_fuel', residential_combinations, 'residential')
     print(residential_prompt)
     print('\n\n')
-#%%
 if len(missing_from_mapping_transport) > 0:
     transport_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_transport, 'aperc_sector', 'aperc_fuel', transport_combinations, 'transport')
     print(transport_prompt)
     print('\n\n')
+
 #IN 17 OCT I GOT TOLDBY CHATGPT THAT I HAD 5 RESPONSES FROM 01PREVIEW REMAINING FOR 7 DAYS LOL
 #%%
 

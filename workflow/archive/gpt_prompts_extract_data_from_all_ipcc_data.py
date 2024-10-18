@@ -1,19 +1,19 @@
-#  please note that the gpt_prompts_extract_data_from_all_ipcc_data.py file is not really a script but an input for the extract_data_from_all_ipcc_data.py script. it contains all the prompts and mappings that i used to get the data from chatgpt. i have left it in here so that you can see what i did, as wella s import and udpate the mappings when you need to.
+#  please note that the gpt_prompts_extract_data_from_all_ipcc_data.py file is not really a script but an input for the extract_data_from_all_ipcc_data.py script. it contains all the prompts and mapping that i used to get the data from chatgpt. i have left it in here so that you can see what i did, as wella s import and udpate the mapping when you need to.
 residential_mapping = {
-    # Coal mappings
+    # Coal mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "01_coal$01_01_coking_coal"): ("1.A.4.b - Residential", "Coking Coal"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "01_coal$01_05_lignite"): ("1.A.4.b - Residential", "Lignite"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "01_coal$01_x_thermal_coal"): ("1.A.4.b - Residential", "Other Bituminous Coal"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "01_coal$x"): ("1.A.4.b - Residential", "Other Bituminous Coal"),
     
-    # Coal products mappings
+    # Coal products mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "02_coal_products$x"): ("1.A.4.b - Residential", "Coke Oven Coke and Lignite Coke"),
     
-    # Peat mappings
+    # Peat mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "03_peat$x"): ("1.A.4.b - Residential", "Peat"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "04_peat_products$x"): ("1.A.4.b - Residential", "Peat"),
     
-    # Petroleum products mappings
+    # Petroleum products mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.4.b - Residential", "Motor Gasoline"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.4.b - Residential", "Aviation Gasoline"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "07_petroleum_products$07_03_naphtha"): ("1.A.4.b - Residential", "Naphtha"),
@@ -27,13 +27,13 @@ residential_mapping = {
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.4.b - Residential", "Other Petroleum Products"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "07_petroleum_products$x"): ("1.A.4.b - Residential", "Other Petroleum Products"),
     
-    # Gas mappings
+    # Gas mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "08_gas$08_01_natural_gas"): ("1.A.4.b - Residential", "Natural Gas"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "08_gas$08_02_lng"): ("1.A.4.b - Residential", "Natural Gas"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "08_gas$08_03_gas_works_gas"): ("1.A.4.b - Residential", "Gas Works Gas"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "08_gas$x"): ("1.A.4.b - Residential", "Natural Gas"),
     
-    # Solid Biomass mappings
+    # Solid Biomass mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"): ("1.A.4.b - Residential", "Wood/Wood Waste"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "15_solid_biomass$15_02_bagasse"): ("1.A.4.b - Residential", "Other Primary Solid Biomass"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "15_solid_biomass$15_03_charcoal"): ("1.A.4.b - Residential", "Charcoal"),
@@ -41,7 +41,7 @@ residential_mapping = {
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "15_solid_biomass$15_05_other_biomass"): ("1.A.4.b - Residential", "Other Primary Solid Biomass"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "15_solid_biomass$x"): ("1.A.4.b - Residential", "Other Primary Solid Biomass"),
     
-    # Other fuels mappings
+    # Other fuels mapping
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "16_others$16_01_biogas"): ("1.A.4.b - Residential", "Other Biogas"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "16_others$16_02_industrial_waste"): ("1.A.4.b - Residential", "Industrial Wastes"),
     ("16_other_sector$16_01_buildings$16_01_02_residential$x", "16_others$16_03_municipal_solid_waste_renewable"): ("1.A.4.b - Residential", "Municipal Wastes (biomass fraction)"),
@@ -53,7 +53,10 @@ residential_mapping = {
 }
 
 transport_mapping = {
-    # Coal mappings
+    ('15_transport_sector$15_02_road$x$x', '07_petroleum_products$07_02_aviation_gasoline'): ('1.A.3.a - Civil Aviation', 'Aviation Gasoline'),
+    ('15_transport_sector$15_03_rail$x$x', '03_peat$x'): ('1.A.3.c - Railways', 'Peat'),
+    ('15_transport_sector$x$x$x', '03_peat$x'): ('1.A.1 - Energy Industries', 'Peat'),
+    # Coal mapping
     ("15_transport_sector$15_03_rail$x$x", "01_coal$01_01_coking_coal"): ("1.A.3.c - Railways", "Sub-Bituminous Coal"),
     ("15_transport_sector$15_04_domestic_navigation$x$x", "01_coal$01_01_coking_coal"): ("1.A.1 - Energy Industries", "Coking Coal"),
     ("15_transport_sector$x$x$x", "01_coal$01_01_coking_coal"): ("1.A.1 - Energy Industries", "Coking Coal"),
@@ -68,12 +71,12 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "01_coal$x"): ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
     ("15_transport_sector$x$x$x", "01_coal$x"): ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
 
-    # Coal products mappings
+    # Coal products mapping
     ("15_transport_sector$15_03_rail$x$x", "02_coal_products$x"): ("1.A.3.c - Railways", "Sub-Bituminous Coal"),
     ("15_transport_sector$15_04_domestic_navigation$x$x", "02_coal_products$x"): ("1.A.1 - Energy Industries", "Coke Oven Coke and Lignite Coke"),
     ("15_transport_sector$x$x$x", "02_coal_products$x"): ("1.A.1 - Energy Industries", "Coke Oven Coke and Lignite Coke"),
 
-    # Crude oil and NGL mappings
+    # Crude oil and NGL mapping
     ("15_transport_sector$15_05_pipeline_transport$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.1 - Energy Industries", "Crude Oil"),
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.1 - Energy Industries", "Crude Oil"),
     ("15_transport_sector$x$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.1 - Energy Industries", "Crude Oil"),
@@ -84,7 +87,7 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "06_crude_oil_and_ngl$x"): ("1.A.1 - Energy Industries", "Crude Oil"),
     ("15_transport_sector$x$x$x", "06_crude_oil_and_ngl$x"): ("1.A.1 - Energy Industries", "Crude Oil"),
 
-    # Petroleum products - Motor Gasoline mappings
+    # Petroleum products - Motor Gasoline mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.3.a - Civil Aviation", "Motor Gasoline"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.3.c - Railways", "Motor Gasoline"),
@@ -93,12 +96,12 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
 
-    # Petroleum products - Aviation Gasoline mappings
+    # Petroleum products - Aviation Gasoline mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.3.a - Civil Aviation", "Aviation Gasoline"),
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.3.a - Civil Aviation", "Aviation Gasoline"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.3.a - Civil Aviation", "Aviation Gasoline"),
 
-    # Petroleum products - Kerosene mappings
+    # Petroleum products - Kerosene mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.3.a - Civil Aviation", "Jet Kerosene"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.3.b - Road Transportation", "Other Kerosene"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.3.c - Railways", "Other Kerosene"),
@@ -107,7 +110,7 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.3.b - Road Transportation", "Other Kerosene"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.3.b - Road Transportation", "Other Kerosene"),
 
-    # Petroleum products - Gas/Diesel Oil mappings
+    # Petroleum products - Gas/Diesel Oil mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.3.a - Civil Aviation", "Diesel Oil"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.3.b - Road Transportation", "Diesel Oil"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.3.c - Railways", "Diesel Oil"),
@@ -116,7 +119,7 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.3.b - Road Transportation", "Diesel Oil"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.3.b - Road Transportation", "Diesel Oil"),
 
-    # Petroleum products - Fuel Oil mappings
+    # Petroleum products - Fuel Oil mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.3.a - Civil Aviation", "Residual Fuel Oil"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.3.b - Road Transportation", "Residual Fuel Oil"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.3.c - Railways", "Residual Fuel Oil"),
@@ -125,7 +128,7 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.3.b - Road Transportation", "Residual Fuel Oil"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.3.b - Road Transportation", "Residual Fuel Oil"),
 
-    # Petroleum products - LPG mappings
+    # Petroleum products - LPG mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.3.a - Civil Aviation", "Liquefied Petroleum Gases"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.3.b - Road Transportation", "Liquefied Petroleum Gases"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.3.c - Railways", "Liquefied Petroleum Gases"),
@@ -134,19 +137,19 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.3.b - Road Transportation", "Liquefied Petroleum Gases"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.3.b - Road Transportation", "Liquefied Petroleum Gases"),
 
-    # Petroleum products - Jet Fuel mappings
+    # Petroleum products - Jet Fuel mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$07_x_jet_fuel"): ("1.A.3.a - Civil Aviation", "Jet Kerosene"),
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_x_jet_fuel"): ("1.A.3.a - Civil Aviation", "Jet Kerosene"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_x_jet_fuel"): ("1.A.3.a - Civil Aviation", "Jet Kerosene"),
 
-    # Petroleum products - Other Petroleum Products mappings
+    # Petroleum products - Other Petroleum Products mapping
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.3.b - Road Transportation", "Other Petroleum Products"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.3.c - Railways", "Other Petroleum Products"),
     ("15_transport_sector$15_04_domestic_navigation$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.3.d - Water-borne Navigation", "Other Petroleum Products"),
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.3.b - Road Transportation", "Other Petroleum Products"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.3.b - Road Transportation", "Other Petroleum Products"),
 
-    # Petroleum products - Unspecified mappings
+    # Petroleum products - Unspecified mapping
     ("15_transport_sector$15_01_domestic_air_transport$x$x", "07_petroleum_products$x"): ("1.A.3.a - Civil Aviation", "Jet Kerosene"),
     ("15_transport_sector$15_02_road$x$x", "07_petroleum_products$x"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
     ("15_transport_sector$15_03_rail$x$x", "07_petroleum_products$x"): ("1.A.3.c - Railways", "Diesel Oil"),
@@ -155,7 +158,7 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "07_petroleum_products$x"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
     ("15_transport_sector$x$x$x", "07_petroleum_products$x"): ("1.A.3.b - Road Transportation", "Motor Gasoline"),
 
-    # Gas mappings
+    # Gas mapping
     ("15_transport_sector$15_02_road$x$x", "08_gas$08_01_natural_gas"): ("1.A.3.b - Road Transportation", "Natural Gas"),
     ("15_transport_sector$15_03_rail$x$x", "08_gas$08_01_natural_gas"): ("1.A.3.c - Railways", "Natural Gas"),
     ("15_transport_sector$15_05_pipeline_transport$x$x", "08_gas$08_01_natural_gas"): ("1.A.1 - Energy Industries", "Natural Gas"),
@@ -169,11 +172,11 @@ transport_mapping = {
     ("15_transport_sector$15_06_nonspecified_transport$x$x", "08_gas$x"): ("1.A.3.b - Road Transportation", "Natural Gas"),
     ("15_transport_sector$x$x$x", "08_gas$x"): ("1.A.3.b - Road Transportation", "Natural Gas"),
 
-    # Others - Biogasoline mappings
+    # Others - Biogasoline mapping
     ("15_transport_sector$15_02_road$x$x", "16_others$16_05_biogasoline"): ("1.A.3.b - Road Transportation", "Biogasoline"),
     ("15_transport_sector$x$x$x", "16_others$16_05_biogasoline"): ("1.A.3.b - Road Transportation", "Biogasoline"),
 
-    # Others - Biodiesel mappings
+    # Others - Biodiesel mapping
     ("15_transport_sector$15_02_road$x$x", "16_others$16_06_biodiesel"): ("1.A.3.b - Road Transportation", "Biodiesels"),
     ("15_transport_sector$15_03_rail$x$x", "16_others$16_06_biodiesel"): ("1.A.3.c - Railways", "Biodiesels"),
     ("15_transport_sector$15_04_domestic_navigation$x$x", "16_others$16_06_biodiesel"): ("1.A.3.d - Water-borne Navigation", "Biodiesels"),
@@ -182,13 +185,24 @@ transport_mapping = {
 }
 
 industry_mapping = {
-    # Construction Sector Mappings
+    ('14_industry_sector$14_02_construction$x$x', '07_petroleum_products$07_02_aviation_gasoline'): 
+        ('1.A.2 - Manufacturing Industries and Construction', 'Aviation Gasoline'),
+    ('14_industry_sector$14_03_manufacturing$14_03_05_transportation_equipment$x', '07_petroleum_products$07_02_aviation_gasoline'): 
+        ('1.A.2 - Manufacturing Industries and Construction', 'Aviation Gasoline'),
+    ('14_industry_sector$14_03_manufacturing$14_03_07_food_beverages_and_tobacco$x', '03_peat$x'): 
+        ('1.A.2 - Manufacturing Industries and Construction', 'Peat'),
+    ('14_industry_sector$14_03_manufacturing$14_03_07_food_beverages_and_tobacco$x', '04_peat_products$x'): 
+        ('1.A.2 - Manufacturing Industries and Construction', 'Peat'),
+    ('14_industry_sector$14_03_manufacturing$14_03_07_food_beverages_and_tobacco$x', '16_others$16_08_other_liquid_biofuels'): 
+        ('1.A.2 - Manufacturing Industries and Construction', 'Other Liquid Biofuels'),
+        
+    # Construction Sector mapping
     ("14_industry_sector$14_02_construction$x$x", "06_crude_oil_and_ngl$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
 
-    # Manufacturing Sector Mappings
+    # Manufacturing Sector mapping
     # Iron and Steel Sector
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "06_crude_oil_and_ngl$x"):
         ("1.A.2.a - Iron and Steel", "Crude Oil"),
@@ -270,7 +284,7 @@ industry_mapping = {
     # Non-Metallic Mineral Products Sector
     ("14_industry_sector$14_03_manufacturing$14_03_04_nonmetallic_mineral_products$x", "06_crude_oil_and_ngl$x"):
         ("1.A.2.f - Non-Metallic Minerals", "Crude Oil"),
-    # Adding mappings for all fuels in this sector
+    # Adding mapping for all fuels in this sector
     ("14_industry_sector$14_03_manufacturing$14_03_04_nonmetallic_mineral_products$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.2.f - Non-Metallic Minerals", "Motor Gasoline"),
     ("14_industry_sector$14_03_manufacturing$14_03_04_nonmetallic_mineral_products$x", "07_petroleum_products$07_03_naphtha"):
@@ -443,7 +457,7 @@ industry_mapping = {
         ("1.A.2.m - Non-specified Industry", "Natural Gas Liquids (NGLs)"),
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "06_crude_oil_and_ngl$x"):
         ("1.A.2.m - Non-specified Industry", "Crude Oil"),
-    # Include mappings for all the fuels
+    # Include mapping for all the fuels
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.2.m - Non-specified Industry", "Motor Gasoline"),
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "07_petroleum_products$07_03_naphtha"):
@@ -472,7 +486,7 @@ industry_mapping = {
         ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas Liquids (NGLs)"),
     ("14_industry_sector$14_03_manufacturing$x$x", "06_crude_oil_and_ngl$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
-    # Include mappings for all the fuels
+    # Include mapping for all the fuels
     ("14_industry_sector$14_03_manufacturing$x$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.2 - Manufacturing Industries and Construction", "Motor Gasoline"),
     ("14_industry_sector$14_03_manufacturing$x$x", "07_petroleum_products$07_03_naphtha"):
@@ -495,7 +509,7 @@ industry_mapping = {
         ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
     ("14_industry_sector$14_03_manufacturing$x$x", "08_gas$08_01_natural_gas"):
         ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
-    # Gas Works Gas mappings
+    # Gas Works Gas mapping
     ("14_industry_sector$14_03_manufacturing$14_03_04_nonmetallic_mineral_products$x", "08_gas$08_03_gas_works_gas"):
         ("1.A.2 - Manufacturing Industries and Construction", "Gas Works Gas"),
     ("14_industry_sector$14_03_manufacturing$14_03_05_transportation_equipment$x", "08_gas$08_03_gas_works_gas"):
@@ -517,7 +531,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "08_gas$08_03_gas_works_gas"):
         ("1.A.2 - Manufacturing Industries and Construction", "Gas Works Gas"),
 
-    # Unspecified Gas mappings (mapped to Natural Gas)
+    # Unspecified Gas mapping (mapped to Natural Gas)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "08_gas$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
     ("14_industry_sector$14_02_construction$x$x", "08_gas$x"):
@@ -549,7 +563,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "08_gas$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
 
-    # Solid Biomass - Fuelwood and Wood Waste mappings
+    # Solid Biomass - Fuelwood and Wood Waste mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
         ("1.A.2 - Manufacturing Industries and Construction", "Wood/Wood Waste"),
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
@@ -573,7 +587,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
         ("1.A.2 - Manufacturing Industries and Construction", "Wood/Wood Waste"),
 
-    # Solid Biomass - Bagasse mappings
+    # Solid Biomass - Bagasse mapping
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "15_solid_biomass$15_02_bagasse"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
     ("14_industry_sector$14_03_manufacturing$14_03_07_food_beverages_and_tobacco$x", "15_solid_biomass$15_02_bagasse"):
@@ -585,7 +599,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$15_02_bagasse"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
 
-    # Solid Biomass - Charcoal mappings
+    # Solid Biomass - Charcoal mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "15_solid_biomass$15_03_charcoal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Charcoal"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "15_solid_biomass$15_03_charcoal"):
@@ -601,7 +615,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$15_03_charcoal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Charcoal"),
 
-    # Solid Biomass - Black Liquor mappings
+    # Solid Biomass - Black Liquor mapping
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "15_solid_biomass$15_04_black_liquor"):
         ("1.A.2 - Manufacturing Industries and Construction", "Sulphite Lyes (Black Liquor)"),
     ("14_industry_sector$14_03_manufacturing$14_03_08_pulp_paper_and_printing$x", "15_solid_biomass$15_04_black_liquor"):
@@ -611,7 +625,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$15_04_black_liquor"):
         ("1.A.2 - Manufacturing Industries and Construction", "Sulphite Lyes (Black Liquor)"),
 
-    # Solid Biomass - Other Biomass mappings
+    # Solid Biomass - Other Biomass mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "15_solid_biomass$15_05_other_biomass"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
     ("14_industry_sector$14_02_construction$x$x", "15_solid_biomass$15_05_other_biomass"):
@@ -643,7 +657,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$15_05_other_biomass"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
 
-    # Unspecified Solid Biomass mappings (mapped to Other Primary Solid Biomass)
+    # Unspecified Solid Biomass mapping (mapped to Other Primary Solid Biomass)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "15_solid_biomass$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
     ("14_industry_sector$14_02_construction$x$x", "15_solid_biomass$x"):
@@ -675,7 +689,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "15_solid_biomass$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Primary Solid Biomass"),
 
-    # Other Fuels - Biogas mappings
+    # Other Fuels - Biogas mapping
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "16_others$16_01_biogas"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Biogas"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "16_others$16_01_biogas"):
@@ -697,7 +711,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_01_biogas"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Biogas"),
 
-    # Other Fuels - Industrial Waste mappings
+    # Other Fuels - Industrial Waste mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "16_others$16_02_industrial_waste"):
         ("1.A.2 - Manufacturing Industries and Construction", "Industrial Wastes"),
     ("14_industry_sector$14_02_construction$x$x", "16_others$16_02_industrial_waste"):
@@ -729,7 +743,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_02_industrial_waste"):
         ("1.A.2 - Manufacturing Industries and Construction", "Industrial Wastes"),
 
-    # Other Fuels - Municipal Solid Waste (renewable) mappings
+    # Other Fuels - Municipal Solid Waste (renewable) mapping
     ("14_industry_sector$14_02_construction$x$x", "16_others$16_03_municipal_solid_waste_renewable"):
         ("1.A.2 - Manufacturing Industries and Construction", "Municipal Wastes (biomass fraction)"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "16_others$16_03_municipal_solid_waste_renewable"):
@@ -747,7 +761,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_03_municipal_solid_waste_renewable"):
         ("1.A.2 - Manufacturing Industries and Construction", "Municipal Wastes (biomass fraction)"),
 
-    # Other Fuels - Municipal Solid Waste (non-renewable) mappings
+    # Other Fuels - Municipal Solid Waste (non-renewable) mapping
     ("14_industry_sector$14_02_construction$x$x", "16_others$16_04_municipal_solid_waste_nonrenewable"):
         ("1.A.2 - Manufacturing Industries and Construction", "Municipal Wastes (non-biomass fraction)"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "16_others$16_04_municipal_solid_waste_nonrenewable"):
@@ -763,7 +777,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_04_municipal_solid_waste_nonrenewable"):
         ("1.A.2 - Manufacturing Industries and Construction", "Municipal Wastes (non-biomass fraction)"),
 
-    # Other Fuels - Biogasoline mappings
+    # Other Fuels - Biogasoline mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "16_others$16_05_biogasoline"):
         ("1.A.2 - Manufacturing Industries and Construction", "Biogasoline"),
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "16_others$16_05_biogasoline"):
@@ -773,7 +787,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_05_biogasoline"):
         ("1.A.2 - Manufacturing Industries and Construction", "Biogasoline"),
 
-    # Other Fuels - Biodiesels mappings
+    # Other Fuels - Biodiesels mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "16_others$16_06_biodiesel"):
         ("1.A.2 - Manufacturing Industries and Construction", "Biodiesels"),
     ("14_industry_sector$14_02_construction$x$x", "16_others$16_06_biodiesel"):
@@ -805,7 +819,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_06_biodiesel"):
         ("1.A.2 - Manufacturing Industries and Construction", "Biodiesels"),
 
-    # Other Fuels - Other Liquid Biofuels mappings
+    # Other Fuels - Other Liquid Biofuels mapping
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "16_others$16_08_other_liquid_biofuels"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Liquid Biofuels"),
     ("14_industry_sector$14_03_manufacturing$14_03_04_nonmetallic_mineral_products$x", "16_others$16_08_other_liquid_biofuels"):
@@ -819,7 +833,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "16_others$16_08_other_liquid_biofuels"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Liquid Biofuels"),
     
-    # Coking Coal Mappings
+    # Coking Coal mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$01_01_coking_coal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Coking Coal"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$01_01_coking_coal"):
@@ -851,7 +865,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "01_coal$01_01_coking_coal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Coking Coal"),
 
-    # Lignite Mappings
+    # Lignite mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$01_05_lignite"):
         ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$01_05_lignite"):
@@ -883,7 +897,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "01_coal$01_05_lignite"):
         ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
 
-    # Thermal Coal Mappings (mapped to Other Bituminous Coal)
+    # Thermal Coal mapping (mapped to Other Bituminous Coal)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$01_x_thermal_coal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$01_x_thermal_coal"):
@@ -915,7 +929,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "01_coal$01_x_thermal_coal"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
 
-    # Unspecified Coal Mappings (mapped to Other Bituminous Coal)
+    # Unspecified Coal mapping (mapped to Other Bituminous Coal)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$x"):
@@ -947,7 +961,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "01_coal$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
 
-    # Coal Products Mappings
+    # Coal Products mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "02_coal_products$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
     ("14_industry_sector$14_02_construction$x$x", "02_coal_products$x"):
@@ -979,7 +993,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "02_coal_products$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
 
-    # Peat Mappings
+    # Peat mapping
     ("14_industry_sector$14_02_construction$x$x", "03_peat$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "03_peat$x"):
@@ -1001,7 +1015,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "03_peat$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
 
-    # Peat Products Mappings (mapped to Peat)
+    # Peat Products mapping (mapped to Peat)
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "04_peat_products$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     ("14_industry_sector$14_03_manufacturing$14_03_03_non_ferrous_metals$x", "04_peat_products$x"):
@@ -1017,7 +1031,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "04_peat_products$x"):
         ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
 
-    # Crude Oil Mappings
+    # Crude Oil mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
     ("14_industry_sector$14_02_construction$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
@@ -1049,7 +1063,7 @@ industry_mapping = {
     ("14_industry_sector$x$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
 
-    # Natural Gas Liquids (NGLs) Mappings
+    # Natural Gas Liquids (NGLs) mapping
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"):
         ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas Liquids (NGLs)"),
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"):
@@ -1084,7 +1098,7 @@ industry_mapping = {
     ("14_industry_sector$14_03_manufacturing$x$x", "01_coal$01_01_coking_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Coking Coal"),
     ("14_industry_sector$x$x$x", "01_coal$01_01_coking_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Coking Coal"),
 
-    # Lignite Mappings (IDs 184-207)
+    # Lignite mapping (IDs 184-207)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$01_05_lignite"): ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$01_05_lignite"): ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "01_coal$01_05_lignite"): ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
@@ -1101,7 +1115,7 @@ industry_mapping = {
     ("14_industry_sector$14_03_manufacturing$x$x", "01_coal$01_05_lignite"): ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
     ("14_industry_sector$x$x$x", "01_coal$01_05_lignite"): ("1.A.2 - Manufacturing Industries and Construction", "Lignite"),
 
-    # Thermal Coal Mappings (IDs 410-456, mapped to Other Bituminous Coal)
+    # Thermal Coal mapping (IDs 410-456, mapped to Other Bituminous Coal)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$01_x_thermal_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$01_x_thermal_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "01_coal$01_x_thermal_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
@@ -1109,135 +1123,138 @@ industry_mapping = {
     ("14_industry_sector$14_03_manufacturing$x$x", "01_coal$01_x_thermal_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$x$x$x", "01_coal$01_x_thermal_coal"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
 
-    # Unspecified Coal Mappings (IDs 734-780, mapped to Other Bituminous Coal)
+    # Unspecified Coal mapping (IDs 734-780, mapped to Other Bituminous Coal)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "01_coal$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$14_02_construction$x$x", "01_coal$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     # ... (continue with IDs 748-780)
     ("14_industry_sector$14_03_manufacturing$x$x", "01_coal$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
     ("14_industry_sector$x$x$x", "01_coal$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Bituminous Coal"),
 
-    # Coal Products Mappings (IDs 1178-1247)
+    # Coal Products mapping (IDs 1178-1247)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "02_coal_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
     ("14_industry_sector$14_02_construction$x$x", "02_coal_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
     # ... (continue with IDs 1199-1247)
     ("14_industry_sector$14_03_manufacturing$x$x", "02_coal_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
     ("14_industry_sector$x$x$x", "02_coal_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Coke Oven Coke and Lignite Coke"),
 
-    # Peat Mappings (IDs 1493-1515)
+    # Peat mapping (IDs 1493-1515)
     ("14_industry_sector$14_02_construction$x$x", "03_peat$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "03_peat$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     # ... (continue with IDs 1503-1515)
     ("14_industry_sector$14_03_manufacturing$x$x", "03_peat$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     ("14_industry_sector$x$x$x", "03_peat$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
 
-    # Peat Products Mappings (IDs 1643-1659, mapped to Peat)
+    # Peat Products mapping (IDs 1643-1659, mapped to Peat)
     ("14_industry_sector$14_03_manufacturing$14_03_01_iron_and_steel$x", "04_peat_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
     # ... (continue with IDs 1647-1659)
     ("14_industry_sector$x$x$x", "04_peat_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Peat"),
 
-    # Crude Oil Mappings (IDs 1946-1969)
+    # Crude Oil mapping (IDs 1946-1969)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
     ("14_industry_sector$14_02_construction$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
     # ... (continue with IDs 1953-1969)
     ("14_industry_sector$x$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
 
-    # Natural Gas Liquids (NGLs) Mappings (IDs 2060-2083)
+    # Natural Gas Liquids (NGLs) mapping (IDs 2060-2083)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"): ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas Liquids (NGLs)"),
     # ... (continue with IDs 2067-2083)
     ("14_industry_sector$x$x$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"): ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas Liquids (NGLs)"),
 
-    # Unspecified Crude Oil and NGLs Mappings (IDs 2426-2449, mapped to Crude Oil)
+    # Unspecified Crude Oil and NGLs mapping (IDs 2426-2449, mapped to Crude Oil)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "06_crude_oil_and_ngl$x"): ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
     # ... (continue with IDs 2433-2449)
     ("14_industry_sector$x$x$x", "06_crude_oil_and_ngl$x"): ("1.A.2 - Manufacturing Industries and Construction", "Crude Oil"),
 
-    # Motor Gasoline Mappings (IDs 2550-2573)
+    # Motor Gasoline mapping (IDs 2550-2573)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Motor Gasoline"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Motor Gasoline"),
     # ... (continue with IDs 2557-2573)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_01_motor_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Motor Gasoline"),
 
-    # Aviation Gasoline Mappings (IDs 2710-2712)
+    # Aviation Gasoline mapping (IDs 2710-2712)
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Aviation Gasoline"),
     ("14_industry_sector$14_03_manufacturing$x$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Aviation Gasoline"),
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_02_aviation_gasoline"): ("1.A.2 - Manufacturing Industries and Construction", "Aviation Gasoline"),
 
-    # Naphtha Mappings (IDs 2828-2851)
+    # Naphtha mapping (IDs 2828-2851)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_03_naphtha"): ("1.A.2 - Manufacturing Industries and Construction", "Naphtha"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_03_naphtha"): ("1.A.2 - Manufacturing Industries and Construction", "Naphtha"),
     # ... (continue with IDs 2838-2851)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_03_naphtha"): ("1.A.2 - Manufacturing Industries and Construction", "Naphtha"),
 
-    # Kerosene Mappings (IDs 2992-3038)
+    # Kerosene mapping (IDs 2992-3038)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.2 - Manufacturing Industries and Construction", "Other Kerosene"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.2 - Manufacturing Industries and Construction", "Other Kerosene"),
     # ... (continue with IDs 3006-3038)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_06_kerosene"): ("1.A.2 - Manufacturing Industries and Construction", "Other Kerosene"),
 
-    # Gas/Diesel Oil Mappings (IDs 3360-3406)
+    # Gas/Diesel Oil mapping (IDs 3360-3406)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Oil"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Oil"),
     # ... (continue with IDs 3374-3406)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_07_gas_diesel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Oil"),
 
-    # Fuel Oil Mappings (IDs 3655-3678)
+    # Fuel Oil mapping (IDs 3655-3678)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Residual Fuel Oil"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Residual Fuel Oil"),
     # ... (continue with IDs 3662-3678)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_08_fuel_oil"): ("1.A.2 - Manufacturing Industries and Construction", "Residual Fuel Oil"),
 
-    # Liquefied Petroleum Gases (LPG) Mappings (IDs 3805-3828)
+    # Liquefied Petroleum Gases (LPG) mapping (IDs 3805-3828)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.2 - Manufacturing Industries and Construction", "Liquefied Petroleum Gases"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.2 - Manufacturing Industries and Construction", "Liquefied Petroleum Gases"),
     # ... (continue with IDs 3812-3828)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_09_lpg"): ("1.A.2 - Manufacturing Industries and Construction", "Liquefied Petroleum Gases"),
 
-    # Refinery Gas Mappings (IDs 3954-3977)
+    # Refinery Gas mapping (IDs 3954-3977)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_10_refinery_gas_not_liquefied"): ("1.A.2 - Manufacturing Industries and Construction", "Refinery Gas"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_10_refinery_gas_not_liquefied"): ("1.A.2 - Manufacturing Industries and Construction", "Refinery Gas"),
     # ... (continue with IDs 3961-3977)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_10_refinery_gas_not_liquefied"): ("1.A.2 - Manufacturing Industries and Construction", "Refinery Gas"),
 
-    # Ethane Mappings (IDs 4077-4090)
+    # Ethane mapping (IDs 4077-4090)
     ("14_industry_sector$14_03_manufacturing$14_03_02_chemical_incl_petrochemical$x", "07_petroleum_products$07_11_ethane"): ("1.A.2 - Manufacturing Industries and Construction", "Ethane"),
     ("14_industry_sector$14_03_manufacturing$14_03_11_nonspecified_industry$x", "07_petroleum_products$07_11_ethane"): ("1.A.2 - Manufacturing Industries and Construction", "Ethane"),
     ("14_industry_sector$14_03_manufacturing$x$x", "07_petroleum_products$07_11_ethane"): ("1.A.2 - Manufacturing Industries and Construction", "Ethane"),
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_11_ethane"): ("1.A.2 - Manufacturing Industries and Construction", "Ethane"),
 
-    # Jet Fuel Mappings (IDs 4177-4200, mapped to Jet Kerosene)
+    # Jet Fuel mapping (IDs 4177-4200, mapped to Jet Kerosene)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_x_jet_fuel"): ("1.A.2 - Manufacturing Industries and Construction", "Jet Kerosene"),
     # ... (continue with IDs 4187-4200)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_x_jet_fuel"): ("1.A.2 - Manufacturing Industries and Construction", "Jet Kerosene"),
 
-    # Other Petroleum Products Mappings (IDs 4665-4780)
+    # Other Petroleum Products mapping (IDs 4665-4780)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
     ("14_industry_sector$14_02_construction$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
     # ... (continue with IDs 4700-4780)
     ("14_industry_sector$x$x$x", "07_petroleum_products$07_x_other_petroleum_products"): ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
 
-    # Unspecified Petroleum Products Mappings (IDs 5279-5302, mapped to Other Petroleum Products)
+    # Unspecified Petroleum Products mapping (IDs 5279-5302, mapped to Other Petroleum Products)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "07_petroleum_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
     # ... (continue with IDs 5286-5302)
     ("14_industry_sector$x$x$x", "07_petroleum_products$x"): ("1.A.2 - Manufacturing Industries and Construction", "Other Petroleum Products"),
 
-    # Natural Gas Mappings (IDs 5463-5486)
+    # Natural Gas mapping (IDs 5463-5486)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "08_gas$08_01_natural_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
     ("14_industry_sector$14_02_construction$x$x", "08_gas$08_01_natural_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
     # ... (continue with IDs 5470-5486)
     ("14_industry_sector$x$x$x", "08_gas$08_01_natural_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Natural Gas"),
 
-    # Gas Works Gas Mappings (IDs 5707-5718)
+    # Gas Works Gas mapping (IDs 5707-5718)
     ("14_industry_sector$14_01_mining_and_quarrying$x$x", "08_gas$08_03_gas_works_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Works Gas"),
     ("14_industry_sector$14_02_construction$x$x", "08_gas$08_03_gas_works_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Works Gas"),
     # ... (continue with IDs 5714-5718)
     ("14_industry_sector$x$x$x", "08_gas$08_03_gas_works_gas"): ("1.A.2 - Manufacturing Industries and Construction", "Gas Works Gas")
 
-    # Add any additional mappings for the remaining combinations as per your data
+    # Add any additional mapping for the remaining combinations as per your data
 }
 
 # Complete Mapping Dictionary for SERVICES
-services_mappings = {
-    # Coal Mappings
+services_mapping = {
+    ('16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x', '06_crude_oil_and_ngl$06_01_crude_oil'): ('1.A.4.a - Commercial/Institutional', 'Crude Oil'),
+    ('16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x', '06_crude_oil_and_ngl$x'): ('1.A.4.a - Commercial/Institutional', 'Orimulsion'),
+    ('16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x', '06_crude_oil_and_ngl$06_02_natural_gas_liquids'): ('1.A.4.a - Commercial/Institutional', 'Natural Gas Liquids (NGLs)'),
+    # Coal mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "01_coal$01_01_coking_coal"):
         ("1.A.4.a - Commercial/Institutional", "Coking Coal"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "01_coal$01_05_lignite"):
@@ -1247,17 +1264,17 @@ services_mappings = {
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "01_coal$x"):
         ("1.A.4.a - Commercial/Institutional", "Other Bituminous Coal"),
 
-    # Coal Products Mappings
+    # Coal Products mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "02_coal_products$x"):
         ("1.A.4.a - Commercial/Institutional", "Coke Oven Coke and Lignite Coke"),
 
-    # Peat Mappings
+    # Peat mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "03_peat$x"):
         ("1.A.4.a - Commercial/Institutional", "Peat"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "04_peat_products$x"):
         ("1.A.4.a - Commercial/Institutional", "Peat"),
 
-    # Petroleum Products Mappings
+    # Petroleum Products mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.4.a - Commercial/Institutional", "Motor Gasoline"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "07_petroleum_products$07_02_aviation_gasoline"):
@@ -1283,7 +1300,7 @@ services_mappings = {
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "07_petroleum_products$x"):
         ("1.A.4.a - Commercial/Institutional", "Other Petroleum Products"),
 
-    # Gas Mappings
+    # Gas mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "08_gas$08_01_natural_gas"):
         ("1.A.4.a - Commercial/Institutional", "Natural Gas"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "08_gas$08_02_lng"):
@@ -1293,7 +1310,7 @@ services_mappings = {
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "08_gas$x"):
         ("1.A.4.a - Commercial/Institutional", "Natural Gas"),
 
-    # Solid Biomass Mappings
+    # Solid Biomass mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
         ("1.A.4.a - Commercial/Institutional", "Wood/Wood Waste"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "15_solid_biomass$15_02_bagasse"):
@@ -1307,7 +1324,7 @@ services_mappings = {
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "15_solid_biomass$x"):
         ("1.A.4.a - Commercial/Institutional", "Other Primary Solid Biomass"),
 
-    # Other Fuels Mappings
+    # Other Fuels mapping
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "16_others$16_01_biogas"):
         ("1.A.4.a - Commercial/Institutional", "Other Biogas"),
     ("16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x", "16_others$16_02_industrial_waste"):
@@ -1326,7 +1343,9 @@ services_mappings = {
         ("1.A.4.a - Commercial/Institutional", "Other Liquid Biofuels"),
 }
 
-transformation_mappings =  {
+transformation_mapping =  {
+    ('09_total_transformation_sector$09_12_nonspecified_transformation$x$x', '07_petroleum_products$07_07_gas_diesel_oil'): ('1.A.1 - Energy Industries', 'Diesel Oil'),
+    ('09_total_transformation_sector$09_12_nonspecified_transformation$x$x', '07_petroleum_products$07_x_other_petroleum_products'): ('1.A.1 - Energy Industries', 'Other Petroleum Products'),
     ('09_total_transformation_sector$x$x$x', '01_coal$01_05_lignite'): ('1.A.1 - Energy Industries', 'Lignite'),
     ('09_total_transformation_sector$x$x$x', '01_coal$01_x_thermal_coal'): ('1.A.1 - Energy Industries', 'Other Bituminous Coal'),
     ('09_total_transformation_sector$x$x$x', '01_coal$x'): ('1.A.1 - Energy Industries', 'Other Bituminous Coal'),
@@ -1385,8 +1404,6 @@ transformation_mappings =  {
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Naphtha"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$x$x", "07_petroleum_products$07_09_lpg"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Liquefied Petroleum Gases"),
-    ("09_total_transformation_sector$09_06_gas_processing_plants$x$x", "07_petroleum_products$07_01_motor_gasoline"):
-        ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Motor Gasoline"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$x$x", "07_petroleum_products$07_06_kerosene"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Other Kerosene"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$x$x", "07_petroleum_products$07_07_gas_diesel_oil"):
@@ -1605,8 +1622,6 @@ transformation_mappings =  {
         ("1.A.1.a - Public Electricity and Heat Production", "Other Liquid Biofuels"),
     ("09_total_transformation_sector$09_02_chp_plants$x$x", "15_solid_biomass$15_04_black_liquor"):
         ("1.A.1.a - Public Electricity and Heat Production", "Sulphite Lyes (Black Liquor)"),
-    ("09_total_transformation_sector$09_02_chp_plants$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
-        ("1.A.1.a - Public Electricity and Heat Production", "Wood/Wood Waste"),
 
     # Gas Processing Plants - Gas Works Plants
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_01_gas_works_plants$x", "01_coal$01_x_thermal_coal"):
@@ -1641,14 +1656,10 @@ transformation_mappings =  {
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Crude Oil"),
 
     # Gas Processing Plants - Liquefaction/Regasification Plants
-    ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "07_petroleum_products$07_01_motor_gasoline"):
-        ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Motor Gasoline"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "07_petroleum_products$07_09_lpg"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Liquefied Petroleum Gases"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "07_petroleum_products$07_03_naphtha"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Naphtha"),
-    ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "07_petroleum_products$07_x_other_petroleum_products"):
-        ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Other Petroleum Products"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "07_petroleum_products$x"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Other Petroleum Products"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_02_liquefaction_regasification_plants$x", "08_gas$08_01_natural_gas"):
@@ -1816,7 +1827,7 @@ transformation_mappings =  {
     ("09_total_transformation_sector$09_08_coal_transformation$x$x", "01_coal$01_x_thermal_coal"):
         ("1.A.1.c - Manufacture of Solid Fuels and Other Energy Industries", "Other Bituminous Coal"),
         
-    # Coking Coal Mappings
+    # Coking Coal mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "01_coal$01_01_coking_coal"):
         ("1.A.1 - Energy Industries", "Coking Coal"),
     ("09_total_transformation_sector$09_06_gas_processing_plants$09_06_01_gas_works_plants$x", "01_coal$01_01_coking_coal"):
@@ -1827,143 +1838,143 @@ transformation_mappings =  {
         ("1.A.1 - Energy Industries", "Coking Coal"),
     ("09_total_transformation_sector$09_08_coal_transformation$09_08_02_blast_furnaces$x", "01_coal$01_01_coking_coal"):
         ("1.A.1 - Energy Industries", "Coking Coal"),
-    # ... (include all other mappings as per the provided data)
+    # ... (include all other mapping as per the provided data)
     
-    # Lignite Mappings
+    # Lignite mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "01_coal$01_05_lignite"):
         ("1.A.1 - Energy Industries", "Lignite"),
     ("09_total_transformation_sector$09_02_chp_plants$x$x", "01_coal$01_05_lignite"):
         ("1.A.1 - Energy Industries", "Lignite"),
-    # ... (continue with all lignite mappings)
+    # ... (continue with all lignite mapping)
     
-    # Thermal Coal Mappings (mapped to Other Bituminous Coal)
+    # Thermal Coal mapping (mapped to Other Bituminous Coal)
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "01_coal$01_x_thermal_coal"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
-    # ... (continue with all thermal coal mappings)
+    # ... (continue with all thermal coal mapping)
     
-    # Unspecified Coal Mappings (mapped to Other Bituminous Coal)
+    # Unspecified Coal mapping (mapped to Other Bituminous Coal)
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "01_coal$x"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
-    # ... (continue with all unspecified coal mappings)
+    # ... (continue with all unspecified coal mapping)
     
-    # Coal Products Mappings
+    # Coal Products mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "02_coal_products$x"):
         ("1.A.1 - Energy Industries", "Coke Oven Coke and Lignite Coke"),
-    # ... (continue with all coal products mappings)
+    # ... (continue with all coal products mapping)
     
-    # Peat Mappings
+    # Peat mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "03_peat$x"):
         ("1.A.1 - Energy Industries", "Peat"),
-    # ... (continue with all peat mappings)
+    # ... (continue with all peat mapping)
     
-    # Peat Products Mappings (mapped to Peat)
+    # Peat Products mapping (mapped to Peat)
     ("09_total_transformation_sector$09_02_chp_plants$x$x", "04_peat_products$x"):
         ("1.A.1 - Energy Industries", "Peat"),
-    # ... (continue with all peat products mappings)
+    # ... (continue with all peat products mapping)
     
-    # Crude Oil Mappings
+    # Crude Oil mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
     ("09_total_transformation_sector$09_02_chp_plants$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
     ("09_total_transformation_sector$09_07_oil_refineries$x$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
-    # ... (continue with all crude oil mappings)
+    # ... (continue with all crude oil mapping)
     
-    # Natural Gas Liquids (NGLs) Mappings
+    # Natural Gas Liquids (NGLs) mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"):
         ("1.A.1 - Energy Industries", "Natural Gas Liquids (NGLs)"),
-    # ... (continue with all NGLs mappings)
+    # ... (continue with all NGLs mapping)
     
-    # Unspecified Crude Oil and NGLs Mappings (mapped to Crude Oil)
+    # Unspecified Crude Oil and NGLs mapping (mapped to Crude Oil)
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "06_crude_oil_and_ngl$x"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
-    # ... (continue with all unspecified crude oil and NGLs mappings)
+    # ... (continue with all unspecified crude oil and NGLs mapping)
     
-    # Motor Gasoline Mappings
+    # Motor Gasoline mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.1 - Energy Industries", "Motor Gasoline"),
-    # ... (continue with all motor gasoline mappings)
+    # ... (continue with all motor gasoline mapping)
     
-    # Aviation Gasoline Mappings
+    # Aviation Gasoline mapping
     ("09_total_transformation_sector$09_07_oil_refineries$x$x", "07_petroleum_products$07_02_aviation_gasoline"):
         ("1.A.1 - Energy Industries", "Aviation Gasoline"),
     ("09_total_transformation_sector$x$x$x", "07_petroleum_products$07_02_aviation_gasoline"):
         ("1.A.1 - Energy Industries", "Aviation Gasoline"),
     
-    # Naphtha Mappings
+    # Naphtha mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_03_naphtha"):
         ("1.A.1 - Energy Industries", "Naphtha"),
-    # ... (continue with all naphtha mappings)
+    # ... (continue with all naphtha mapping)
     
-    # Kerosene Mappings
+    # Kerosene mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_06_kerosene"):
         ("1.A.1 - Energy Industries", "Other Kerosene"),
-    # ... (continue with all kerosene mappings)
+    # ... (continue with all kerosene mapping)
     
-    # Gas/Diesel Oil Mappings
+    # Gas/Diesel Oil mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_07_gas_diesel_oil"):
         ("1.A.1 - Energy Industries", "Gas Oil"),
-    # ... (continue with all gas/diesel oil mappings)
+    # ... (continue with all gas/diesel oil mapping)
     
-    # Fuel Oil Mappings
+    # Fuel Oil mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_08_fuel_oil"):
         ("1.A.1 - Energy Industries", "Residual Fuel Oil"),
-    # ... (continue with all fuel oil mappings)
+    # ... (continue with all fuel oil mapping)
     
-    # Liquefied Petroleum Gases (LPG) Mappings
+    # Liquefied Petroleum Gases (LPG) mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_09_lpg"):
         ("1.A.1 - Energy Industries", "Liquefied Petroleum Gases"),
-    # ... (continue with all LPG mappings)
+    # ... (continue with all LPG mapping)
     
-    # Refinery Gas Mappings
+    # Refinery Gas mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_10_refinery_gas_not_liquefied"):
         ("1.A.1 - Energy Industries", "Refinery Gas"),
-    # ... (continue with all refinery gas mappings)
+    # ... (continue with all refinery gas mapping)
     
-    # Ethane Mappings
+    # Ethane mapping
     ("09_total_transformation_sector$09_07_oil_refineries$x$x", "07_petroleum_products$07_11_ethane"):
         ("1.A.1 - Energy Industries", "Ethane"),
-    # ... (continue with all ethane mappings)
+    # ... (continue with all ethane mapping)
     
-    # Jet Fuel Mappings (mapped to Jet Kerosene)
+    # Jet Fuel mapping (mapped to Jet Kerosene)
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_x_jet_fuel"):
         ("1.A.1 - Energy Industries", "Jet Kerosene"),
-    # ... (continue with all jet fuel mappings)
+    # ... (continue with all jet fuel mapping)
     
-    # Other Petroleum Products Mappings
+    # Other Petroleum Products mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$07_x_other_petroleum_products"):
         ("1.A.1 - Energy Industries", "Other Petroleum Products"),
-    # ... (continue with all other petroleum products mappings)
+    # ... (continue with all other petroleum products mapping)
     
-    # Unspecified Petroleum Products Mappings (mapped to Other Petroleum Products)
+    # Unspecified Petroleum Products mapping (mapped to Other Petroleum Products)
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "07_petroleum_products$x"):
         ("1.A.1 - Energy Industries", "Other Petroleum Products"),
-    # ... (continue with all unspecified petroleum products mappings)
+    # ... (continue with all unspecified petroleum products mapping)
     
-    # Natural Gas Mappings
+    # Natural Gas mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "08_gas$08_01_natural_gas"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
-    # ... (continue with all natural gas mappings)
+    # ... (continue with all natural gas mapping)
     
-    # LNG Mappings (mapped to Natural Gas)
+    # LNG mapping (mapped to Natural Gas)
     ("09_total_transformation_sector$09_06_gas_processing_plants$x$x", "08_gas$08_02_lng"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
-    # ... (continue with all LNG mappings)
+    # ... (continue with all LNG mapping)
     
-    # Gas Works Gas Mappings
+    # Gas Works Gas mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "08_gas$08_03_gas_works_gas"):
         ("1.A.1 - Energy Industries", "Gas Works Gas"),
-    # ... (continue with all gas works gas mappings)
+    # ... (continue with all gas works gas mapping)
     
-    # Solid Biomass Mappings
+    # Solid Biomass mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
         ("1.A.1 - Energy Industries", "Wood/Wood Waste"),
     ("09_total_transformation_sector$09_02_chp_plants$x$x", "15_solid_biomass$15_02_bagasse"):
         ("1.A.1 - Energy Industries", "Other Primary Solid Biomass"),
-    # ... (continue with all solid biomass mappings)
+    # ... (continue with all solid biomass mapping)
     
-    # Other Fuels Mappings
+    # Other Fuels mapping
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "16_others$16_01_biogas"):
         ("1.A.1 - Energy Industries", "Other Biogas"),
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "16_others$16_02_industrial_waste"):
@@ -1976,10 +1987,41 @@ transformation_mappings =  {
         ("1.A.1 - Energy Industries", "Biodiesels"),
     ("09_total_transformation_sector$09_01_electricity_plants$x$x", "16_others$16_08_other_liquid_biofuels"):
         ("1.A.1 - Energy Industries", "Other Liquid Biofuels"),
-    # ... (continue with all other fuels mappings)
+    # ... (continue with all other fuels mapping)
 }
 
-other_mappings= {
+other_mapping= {
+    ('04_international_marine_bunkers$x$x$x', '08_gas$08_02_lng'): ('1.A.3.d - International Water-borne Navigation', 'Liquefied Natural Gas'),
+    ('04_international_marine_bunkers$x$x$x', '08_gas$x'): ('1.A.3.d - International Water-borne Navigation', 'Natural Gas'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x', '06_crude_oil_and_ngl$06_02_natural_gas_liquids'): ('1.A.1 - Energy Industries', 'Natural Gas Liquids (NGLs)'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x', '07_petroleum_products$07_03_naphtha'): ('1.A.1 - Energy Industries', 'Naphtha'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_05_coke_ovens$x', '01_coal$01_01_coking_coal'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Coking Coal'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_05_coke_ovens$x', '01_coal$01_05_lignite'): ('1.A.1 - Energy Industries', 'Lignite'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_05_coke_ovens$x', '01_coal$01_x_thermal_coal'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Other Bituminous Coal'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_05_coke_ovens$x', '01_coal$x'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Coal Tar'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_06_coal_mines$x', '01_coal$01_01_coking_coal'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Coking Coal'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_06_coal_mines$x', '01_coal$01_05_lignite'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Lignite'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_06_coal_mines$x', '01_coal$01_x_thermal_coal'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Other Bituminous Coal'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_06_coal_mines$x', '01_coal$x'): ('1.A.2.c - Manufacture of Solid Fuels and Other Energy Industries', 'Coal Tar'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_07_blast_furnaces$x', '02_coal_products$x'): ('1.A.2.a - Iron and Steel', 'Coke Oven Coke and Lignite Coke'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_07_blast_furnaces$x', '07_petroleum_products$07_07_gas_diesel_oil'): ('1.A.2.a - Iron and Steel', 'Diesel Oil'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_07_blast_furnaces$x', '07_petroleum_products$07_08_fuel_oil'): ('1.A.2.a - Iron and Steel', 'Residual Fuel Oil'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_11_oil_refineries$x', '06_crude_oil_and_ngl$06_01_crude_oil'): ('1.A.1.b - Petroleum Refining', 'Crude Oil'),
+    ('10_losses_and_own_use$10_01_own_use$10_01_11_oil_refineries$x', '01_coal$01_x_thermal_coal'): ('1.A.1.b - Petroleum Refining', 'Other Bituminous Coal'),
+    
+    ('10_losses_and_own_use$10_01_own_use$10_01_12_oil_and_gas_extraction$x', '06_crude_oil_and_ngl$06_02_natural_gas_liquids'): ('1.A.1.c - Oil and Gas Extraction', 'Natural Gas Liquids (NGLs)'),
+    
+    ('10_losses_and_own_use$10_02_transmission_and_distribution_losses$x$x', '01_coal$01_01_coking_coal'): ('1.A.1 - Energy Industries', 'Coking Coal'),
+    ('10_losses_and_own_use$10_02_transmission_and_distribution_losses$x$x', '01_coal$01_05_lignite'): ('1.A.1 - Energy Industries', 'Lignite'),
+    
+    ('16_other_sector$16_02_agriculture_and_fishing$x$x', '07_petroleum_products$07_02_aviation_gasoline'): ('1.A.4.c - Agriculture/Forestry/Fishing', 'Aviation Gasoline'),
+    ('16_other_sector$16_02_agriculture_and_fishing$x$x', '16_others$16_03_municipal_solid_waste_renewable'): ('1.A.4.c - Agriculture/Forestry/Fishing', 'Municipal Wastes (biomass fraction)'),
+
     ('10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x', '06_crude_oil_and_ngl$06_01_crude_oil'): ('1.A.1 - Energy Industries', 'Crude Oil'),
     ('10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x', '06_crude_oil_and_ngl$x'): ('1.A.1 - Energy Industries', 'Natural Gas Liquids (NGLs)'),
     ('10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x', '07_petroleum_products$07_01_motor_gasoline'): ('1.A.1 - Energy Industries', 'Motor Gasoline'),
@@ -2563,7 +2605,7 @@ other_mappings= {
     ("17_nonenergy_use$x$x$x", "01_coal$x"):
         ("1.A.2.g - Other Manufacturing Industries", "Other Bituminous Coal"),
     # Continue mapping...
-    # Coking Coal Mappings
+    # Coking Coal mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "01_coal$01_01_coking_coal"):
         ("1.A.1 - Energy Industries", "Coking Coal"),
     ("10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x", "01_coal$01_01_coking_coal"):
@@ -2595,7 +2637,7 @@ other_mappings= {
     ("17_nonenergy_use$x$x$x", "01_coal$01_01_coking_coal"):
         ("1.A.1 - Energy Industries", "Coking Coal"),
     
-    # Lignite Mappings
+    # Lignite mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "01_coal$01_05_lignite"):
         ("1.A.1 - Energy Industries", "Lignite"),
     ("10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x", "01_coal$01_05_lignite"):
@@ -2631,7 +2673,7 @@ other_mappings= {
     ("17_nonenergy_use$x$x$x", "01_coal$01_05_lignite"):
         ("1.A.1 - Energy Industries", "Lignite"),
     
-    # Thermal Coal Mappings (Mapped to Other Bituminous Coal)
+    # Thermal Coal mapping (Mapped to Other Bituminous Coal)
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "01_coal$01_x_thermal_coal"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
     ("10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x", "01_coal$01_x_thermal_coal"):
@@ -2673,93 +2715,93 @@ other_mappings= {
     ("17_nonenergy_use$x$x$x", "01_coal$01_x_thermal_coal"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
     
-    # Unspecified Coal Mappings (Mapped to Other Bituminous Coal)
+    # Unspecified Coal mapping (Mapped to Other Bituminous Coal)
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "01_coal$x"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
     ("10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants$x", "01_coal$x"):
         ("1.A.1 - Energy Industries", "Other Bituminous Coal"),
-    # ... (Continue with the rest of the unspecified coal mappings)
+    # ... (Continue with the rest of the unspecified coal mapping)
 
-    # Coal Products Mappings
+    # Coal Products mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "02_coal_products$x"):
         ("1.A.1 - Energy Industries", "Coke Oven Coke and Lignite Coke"),
-    # ... (Continue with the rest of the coal products mappings)
+    # ... (Continue with the rest of the coal products mapping)
 
-    # Peat Mappings
+    # Peat mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "03_peat$x"):
         ("1.A.1 - Energy Industries", "Peat"),
-    # ... (Continue with the rest of the peat mappings)
+    # ... (Continue with the rest of the peat mapping)
 
-    # Peat Products Mappings (Mapped to Peat)
+    # Peat Products mapping (Mapped to Peat)
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "04_peat_products$x"):
         ("1.A.1 - Energy Industries", "Peat"),
-    # ... (Continue with the rest of the peat products mappings)
+    # ... (Continue with the rest of the peat products mapping)
 
-    # Crude Oil Mappings
+    # Crude Oil mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "06_crude_oil_and_ngl$06_01_crude_oil"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
-    # ... (Continue with the rest of the crude oil mappings)
+    # ... (Continue with the rest of the crude oil mapping)
 
-    # Natural Gas Liquids (NGLs) Mappings
+    # Natural Gas Liquids (NGLs) mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_08_coke_ovens$x", "06_crude_oil_and_ngl$06_02_natural_gas_liquids"):
         ("1.A.1 - Energy Industries", "Natural Gas Liquids (NGLs)"),
-    # ... (Continue with the rest of the NGLs mappings)
+    # ... (Continue with the rest of the NGLs mapping)
 
-    # Unspecified Crude Oil and NGLs Mappings (Mapped to Crude Oil)
+    # Unspecified Crude Oil and NGLs mapping (Mapped to Crude Oil)
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "06_crude_oil_and_ngl$x"):
         ("1.A.1 - Energy Industries", "Crude Oil"),
-    # ... (Continue with the rest of the unspecified crude oil and NGLs mappings)
+    # ... (Continue with the rest of the unspecified crude oil and NGLs mapping)
 
-    # Motor Gasoline Mappings
+    # Motor Gasoline mapping
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.3.d - International Water-Borne Navigation", "Motor Gasoline"),
     ("05_international_aviation_bunkers$x$x$x", "07_petroleum_products$07_01_motor_gasoline"):
         ("1.A.3.a - International Aviation", "Motor Gasoline"),
-    # ... (Continue with the rest of the motor gasoline mappings)
+    # ... (Continue with the rest of the motor gasoline mapping)
 
-    # Aviation Gasoline Mappings
+    # Aviation Gasoline mapping
     ("05_international_aviation_bunkers$x$x$x", "07_petroleum_products$07_02_aviation_gasoline"):
         ("1.A.3.a - International Aviation", "Aviation Gasoline"),
-    # ... (Continue with the rest of the aviation gasoline mappings)
+    # ... (Continue with the rest of the aviation gasoline mapping)
 
-    # Naphtha Mappings
+    # Naphtha mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_09_coal_mines$x", "07_petroleum_products$07_03_naphtha"):
         ("1.A.1 - Energy Industries", "Naphtha"),
-    # ... (Continue with the rest of the naphtha mappings)
+    # ... (Continue with the rest of the naphtha mapping)
 
-    # Kerosene Mappings
+    # Kerosene mapping
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_06_kerosene"):
         ("1.A.3.d - International Water-Borne Navigation", "Other Kerosene"),
-    # ... (Continue with the rest of the kerosene mappings)
+    # ... (Continue with the rest of the kerosene mapping)
 
-    # Gas/Diesel Oil Mappings
+    # Gas/Diesel Oil mapping
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_07_gas_diesel_oil"):
         ("1.A.3.d - International Water-Borne Navigation", "Gas Oil"),
     ("05_international_aviation_bunkers$x$x$x", "07_petroleum_products$07_07_gas_diesel_oil"):
         ("1.A.3.a - International Aviation", "Gas Oil"),
-    # ... (Continue with the rest of the gas/diesel oil mappings)
+    # ... (Continue with the rest of the gas/diesel oil mapping)
 
-    # Fuel Oil Mappings
+    # Fuel Oil mapping
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_08_fuel_oil"):
         ("1.A.3.d - International Water-Borne Navigation", "Residual Fuel Oil"),
-    # ... (Continue with the rest of the fuel oil mappings)
+    # ... (Continue with the rest of the fuel oil mapping)
 
-    # LPG Mappings
+    # LPG mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "07_petroleum_products$07_09_lpg"):
         ("1.A.1 - Energy Industries", "Liquefied Petroleum Gases"),
-    # ... (Continue with the rest of the LPG mappings)
+    # ... (Continue with the rest of the LPG mapping)
 
-    # Refinery Gas Mappings
+    # Refinery Gas mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "07_petroleum_products$07_10_refinery_gas_not_liquefied"):
         ("1.A.1 - Energy Industries", "Refinery Gas"),
-    # ... (Continue with the rest of the refinery gas mappings)
+    # ... (Continue with the rest of the refinery gas mapping)
 
-    # Natural Gas Mappings
+    # Natural Gas mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "08_gas$08_01_natural_gas"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
 #################
 
-    # Ethane Mappings
+    # Ethane mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_12_bkb_pb_plants$x", "07_petroleum_products$07_11_ethane"):
         ("1.A.1 - Energy Industries", "Ethane"),
     ("10_losses_and_own_use$10_01_own_use$10_01_13_liquefaction_plants_coal_to_oil$x", "07_petroleum_products$07_11_ethane"):
@@ -2775,7 +2817,7 @@ other_mappings= {
     ("17_nonenergy_use$x$x$x", "07_petroleum_products$07_11_ethane"):
         ("1.A.1 - Energy Industries", "Ethane"),
     
-    # Jet Fuel Mappings (mapped to Jet Kerosene)
+    # Jet Fuel mapping (mapped to Jet Kerosene)
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_x_jet_fuel"):
         ("1.A - Fuel Combustion Activities", "Jet Kerosene"),
     ("05_international_aviation_bunkers$x$x$x", "07_petroleum_products$07_x_jet_fuel"):
@@ -2805,7 +2847,7 @@ other_mappings= {
     ("16_other_sector$x$x$x", "07_petroleum_products$07_x_jet_fuel"):
         ("1.A - Fuel Combustion Activities", "Jet Kerosene"),
     
-    # Other Petroleum Products Mappings
+    # Other Petroleum Products mapping
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$07_x_other_petroleum_products"):
         ("1.A - Fuel Combustion Activities", "Other Petroleum Products"),
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "07_petroleum_products$07_x_other_petroleum_products"):
@@ -2814,7 +2856,7 @@ other_mappings= {
         ("1.A.1 - Energy Industries", "Other Petroleum Products"),
     # ... (Continue mapping all other sectors with '07_petroleum_products$07_x_other_petroleum_products')
     
-    # Unspecified Petroleum Products Mappings (mapped to Other Petroleum Products)
+    # Unspecified Petroleum Products mapping (mapped to Other Petroleum Products)
     ("04_international_marine_bunkers$x$x$x", "07_petroleum_products$x"):
         ("1.A - Fuel Combustion Activities", "Other Petroleum Products"),
     ("05_international_aviation_bunkers$x$x$x", "07_petroleum_products$x"):
@@ -2823,27 +2865,27 @@ other_mappings= {
         ("1.A.1 - Energy Industries", "Other Petroleum Products"),
     # ... (Continue mapping all other sectors with '07_petroleum_products$x')
     
-    # Natural Gas Mappings
+    # Natural Gas mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "08_gas$08_01_natural_gas"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
     # ... (Continue mapping all other sectors with '08_gas$08_01_natural_gas')
     
-    # LNG Mappings (mapped to Natural Gas)
+    # LNG mapping (mapped to Natural Gas)
     ("10_losses_and_own_use$10_01_own_use$10_01_03_liquefaction_regasification_plants$x", "08_gas$08_02_lng"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
     # ... (Continue mapping all other sectors with '08_gas$08_02_lng')
     
-    # Gas Works Gas Mappings
+    # Gas Works Gas mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "08_gas$08_03_gas_works_gas"):
         ("1.A.1 - Energy Industries", "Gas Works Gas"),
     # ... (Continue mapping all other sectors with '08_gas$08_03_gas_works_gas')
     
-    # Unspecified Gas Mappings (mapped to Natural Gas)
+    # Unspecified Gas mapping (mapped to Natural Gas)
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "08_gas$x"):
         ("1.A.1 - Energy Industries", "Natural Gas"),
     # ... (Continue mapping all other sectors with '08_gas$x')
     
-    # Solid Biomass Mappings
+    # Solid Biomass mapping
     ("12_total_final_consumption$x$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
         ("1.A - Fuel Combustion Activities", "Wood/Wood Waste"),
     ("13_total_final_energy_consumption$x$x$x", "15_solid_biomass$15_01_fuelwood_and_woodwaste"):
@@ -2852,22 +2894,22 @@ other_mappings= {
         ("1.A - Fuel Combustion Activities", "Wood/Wood Waste"),
     # ... (Continue mapping all other sectors with '15_solid_biomass$15_01_fuelwood_and_woodwaste')
     
-    # Other Biomass Mappings
+    # Other Biomass mapping
     ("12_total_final_consumption$x$x$x", "15_solid_biomass$15_02_bagasse"):
         ("1.A - Fuel Combustion Activities", "Other Primary Solid Biomass"),
     # ... (Continue mapping all other sectors with '15_solid_biomass$15_02_bagasse')
     
-    # Biogas Mappings
+    # Biogas mapping
     ("10_losses_and_own_use$10_01_own_use$10_01_01_electricity_chp_and_heat_plants$x", "16_others$16_01_biogas"):
         ("1.A.1 - Energy Industries", "Other Biogas"),
     # ... (Continue mapping all other sectors with '16_others$16_01_biogas')
     
-    # Biodiesel Mappings
+    # Biodiesel mapping
     ("04_international_marine_bunkers$x$x$x", "16_others$16_06_biodiesel"):
         ("1.A - Fuel Combustion Activities", "Biodiesels"),
     # ... (Continue mapping all other sectors with '16_others$16_06_biodiesel')
     
-    # Other Liquid Biofuels Mappings
+    # Other Liquid Biofuels mapping
     ("12_total_final_consumption$x$x$x", "16_others$16_08_other_liquid_biofuels"):
         ("1.A - Fuel Combustion Activities", "Other Liquid Biofuels"),
     # ... (Continue mapping all other sectors with '16_others$16_08_other_liquid_biofuels')
