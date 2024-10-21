@@ -1,3 +1,4 @@
+#%%
 #this is the finalised version for extracting data from the ipcc full dataset on energy emission factors. We had a much more messy script before, but this is a bit nicer ..  although nothing that i would want to show off to anyone!
 #chances are that the process is still valid a few years after this was produced - i dont see us changing the way we strucutre our outlook data, but we very likely will have new sectors and fuel combinations. So you will need to run this again and check the outputs so taht you can update the mappings. -  also update the gwp's and emissions factors inputs if this is a while aftr 10/17/2024 - they might have been updated.
 #also please note that the config/aperc_to_ipcc_sector_mappings.xlsx file is an input for this script. it contains all the mappings that i used to get the data from chatgpt usign prompts generated in this script. 
@@ -272,7 +273,15 @@ def remove_not_needed_mappings(file_path, not_needed_df, sector):
     
     # Filter out the not needed mappings
     mapping_df = mappings[sector]
-    filtered_mapping_df = mapping_df.loc[~mapping_df[['aperc_sector', 'aperc_fuel']].isin(not_needed_df[['aperc_sector', 'aperc_fuel']]).all(axis=1)]
+    
+    # Merge mapping_df with not_needed_df to identify rows that are in both DataFrames
+    merged_df = mapping_df.merge(not_needed_df[['aperc_sector', 'aperc_fuel']], 
+                                on=['aperc_sector', 'aperc_fuel'], 
+                                how='left', 
+                                indicator=True)
+
+    # Filter out rows that are in not_needed_df
+    filtered_mapping_df = merged_df[merged_df['_merge'] == 'left_only'].drop(columns=['_merge'])
     
     # Save the updated mappings back to the Excel file
     mappings[sector] = filtered_mapping_df
@@ -351,7 +360,7 @@ def map_sectors(mapping_df, emissions_factors_df, default_sector="1.A.1 - Energy
     
     left_onlys = mapping_test[mapping_test['_merge'] == 'left_only']
     if len(left_onlys) > 0:
-        print(f"Warning: {len(left_onlys)} combinations are still missing from the emissions factors")
+        print(f"Warning: {len(left_onlys)} combinations in the mappings are missing from the emissions factors. They probably got set wrong.")
     return mapping_test, left_onlys
 
 # Example of calling the updated function
@@ -361,6 +370,8 @@ results_industry, left_onlys_industry = map_sectors(industry_mapping, new_emissi
 results_services, left_onlys_services = map_sectors(services_mapping, new_emissions_factors_ipcc)
 results_transformation, left_onlys_transformation = map_sectors(transformation_mapping, new_emissions_factors_ipcc)
 results_other, left_onlys_other = map_sectors(other_mapping, new_emissions_factors_ipcc)
+
+
 #%%
 # Function to check missing sectors against the model combinations
 def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector):
@@ -381,7 +392,7 @@ def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector):
 
 #%%
 missing_from_mapping_industry, not_needed_in_mapping_industry = check_missing_sectors(industry_mapping, industry_combinations_model, 'aperc_sector', 'aperc_fuel', 'industry')
-
+#%%
 missing_from_mapping_services, not_needed_in_mapping_services= check_missing_sectors(services_mapping, services_combinations_model, 'aperc_sector', 'aperc_fuel', 'services')
 
 missing_from_mapping_transformation, not_needed_in_mapping_transformation= check_missing_sectors(transformation_mapping, transformation_combinations_model, 'aperc_sector', 'aperc_fuel', 'transformation')
@@ -400,11 +411,18 @@ if DO_THIS:
     archive_mappings(mappings_file_path)
     
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_industry, 'industry')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_industry[['aperc_sector','aperc_fuel']], 'industry')
+    
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_services, 'services')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_services[['aperc_sector','aperc_fuel']], 'services')
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_residential, 'residential')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_residential[['aperc_sector','aperc_fuel']], 'residential')
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_transport, 'transport')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_transport[['aperc_sector','aperc_fuel']], 'transport')
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_transformation, 'transformation')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_transformation[['aperc_sector','aperc_fuel']], 'transformation')
     remove_not_needed_mappings(mappings_file_path, not_needed_in_mapping_other, 'other')
+    remove_not_needed_mappings(mappings_file_path, left_onlys_other[['aperc_sector','aperc_fuel']], 'other')
 #%%
 # Function to create prompts for missing sector and fuel combinations
 def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col, original_combinations_df, industry_tag):
@@ -521,9 +539,22 @@ if len(all_results.loc[all_results['_merge'] == 'right_only']) > 0:
 all_results['No expected energy use'] = False
 all_results.loc[all_results['_merge'] == 'both', 'No expected energy use'] = True
 
-
 #drop the merge col
 all_results.drop(columns=['_merge'], inplace=True)
+
+#where one of these (Sector not applicable	Fuel not applicable	_merge	No expected energy use) is True, make sure we have that row for every gas. And set the Value to nan. This is all because we want it to be clear that we have delibarately set these values to nan instead of them being missing.
+nans_to_keep = all_results.loc[all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable']].copy()
+all_results = all_results.loc[~(all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable'])]
+nans_to_keep['Value'] = np.nan
+for gas in ['CARBON DIOXIDE', 'METHANE', 'NITROUS OXIDE']:
+    nans_to_keep['Gas'] = gas
+    all_results = pd.concat([all_results, nans_to_keep])
+    
+#check there are no more nans in gas col:
+nans = all_results.loc[all_results['Gas'].isna()]
+if len(nans) > 0:
+    breakpoint()
+    raise ValueError('Error: there are nans in the Gas column')
 
 #%%
 #convert everything to mt/pj (from kg/tj)
@@ -536,12 +567,16 @@ all_results['CO2e emissions factor'] = all_results['Value'] * all_results['GWP']
 all_results.rename(columns={'Value': 'Original emissions factor'}, inplace=True)
 
 #%%
+
+#check for nas whwere all of the following are False:Sector not applicable	Fuel not applicable	No expected energy use
+nas = all_results.loc[~(all_results['Sector not applicable'] | all_results['Fuel not applicable'] | all_results['No expected energy use']) & all_results['CO2e emissions factor'].isna()]
+if len(nas) > 0:
+    breakpoint()
+    raise ValueError('Error: there are nans in the CO2e emissions factor column')
+#%%
+
 #drop the columns we dont need
 all_results.drop(columns=['aperc_sector', 'aperc_fuel', 'ipcc_sector','ipcc_fuel'], inplace=True)
-
-#%%
-#save to csv
-all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_details.csv', index=False)
 
 #and then remove non-essential cols and save to csv as simplified
 # 'EF ID', 'IPCC 1996 Source/Sink Category',
@@ -559,12 +594,16 @@ all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_
 #        'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels',
 #        'sub4sectors', 'Sector not applicable', 'Fuel not applicable',
 #        'No expected energy use',
-all_results_simple = all_results[['Unit', 'Gas', 'CO2e emissions factor', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors','fuels', 'subfuels', 'Sector not applicable', 'Fuel not applicable', 'No expected energy use']]
+all_results_simple = all_results[['Unit', 'Gas', 'CO2e emissions factor', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors','fuels', 'subfuels', 'Sector not applicable', 'Fuel not applicable', 'No expected energy use']].copy()
 
 #chekc for udplicates
 duplicates = all_results_simple.loc[all_results_simple.duplicated()]
 if len(duplicates) > 0:
     print(f"Warning: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns, {duplicates}")
+#%%
+#save to csv
+all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_details.csv', index=False)
+
 all_results_simple.to_csv('../output_data/9th_edition_emissions_factors_all_gases_simplified.csv', index=False)
 #%%
 
