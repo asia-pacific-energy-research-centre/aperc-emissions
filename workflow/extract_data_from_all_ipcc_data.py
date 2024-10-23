@@ -8,7 +8,7 @@ import numpy as np
 import os
 from datetime import datetime
 import shutil
-model_df_wide_original = pd.read_csv('../input_data/model_df_wide_tgt_20241018.csv')
+model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
 gwp_dict = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
 #then print all the unique values in the IPCC 2006 Source/Sink Category column and map them to all the unique vategories in the model_df_wide['sectors'] column < we might ahve to create a concat of all the subsectors columns in mdoel_df_wide to get more precise mappings
@@ -44,26 +44,25 @@ model_df_wide_original_wide_copy = model_df_wide.copy()
 
 # %%
 #we also hvae a lot of instances where we have combinations of aperc_sectors and aperc_fuels that simply arent likely. So we will remove them by removing any where the sum of energy values across all years is 0:
-
 model_df_wide_invalid_rows = model_df_wide_original.copy()
 
 model_df_wide_invalid_rows['aperc_sector'] = model_df_wide_invalid_rows['sectors'] + '$' + model_df_wide_invalid_rows['sub1sectors'] + '$' + model_df_wide_invalid_rows['sub2sectors'] + '$' + model_df_wide_invalid_rows['sub3sectors']
 model_df_wide_invalid_rows['aperc_fuel'] = model_df_wide_invalid_rows['fuels'] + '$' + model_df_wide_invalid_rows['subfuels']
 
-model_df_wide_invalid_rows = model_df_wide_invalid_rows.drop(columns=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels', 'is_subtotal', 'sub4sectors', 'scenarios', 'economy'])
+model_df_wide_invalid_rows = model_df_wide_invalid_rows.drop(columns=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels', 'subtotal_layout', 'subtotal_results', 'sub4sectors', 'scenarios', 'economy'])
 
 #melt 
 model_df_wide_invalid_rows = model_df_wide_invalid_rows.melt(id_vars=['aperc_sector', 'aperc_fuel'], var_name='year', value_name='value')
 #set all values that are na to 0:
 model_df_wide_invalid_rows['value'] = model_df_wide_invalid_rows['value'].fillna(0)
 #calc the sum of value
-model_df_wide_invalid_rows['sum_value'] = model_df_wide_invalid_rows.groupby(['aperc_sector', 'aperc_fuel'])['value'].transform('sum')
+model_df_wide_invalid_rows = model_df_wide_invalid_rows.groupby(['aperc_sector', 'aperc_fuel'])['value'].sum().reset_index()
 
 model_df_wide_invalid_rows_copy = model_df_wide_invalid_rows.copy()
 #%%
 #keep only row where value is 0 
-model_df_wide_invalid_rows = model_df_wide_invalid_rows[model_df_wide_invalid_rows['sum_value'] == 0]
-valid_rows = model_df_wide_invalid_rows_copy[model_df_wide_invalid_rows_copy['sum_value'] != 0][['aperc_sector', 'aperc_fuel', 'sum_value']].drop_duplicates()
+model_df_wide_invalid_rows = model_df_wide_invalid_rows[model_df_wide_invalid_rows['value'] == 0]
+valid_rows = model_df_wide_invalid_rows_copy[model_df_wide_invalid_rows_copy['value'] != 0][['aperc_sector', 'aperc_fuel', 'value']].drop_duplicates()
 model_df_wide_invalid_rows=model_df_wide_invalid_rows[['aperc_sector', 'aperc_fuel']].drop_duplicates()
 
 #for some reason we are missing data for all of '16_01_01_commercial_and_public_services', '16_01_02_residential'. we dont want to drop them so remove any rows which contain them in their aperc_sector col:
@@ -159,6 +158,9 @@ not_applicable_sectors = [
     '18_electricity_output_in_gwh$x$x$x',
     '19_heat_output_in_pj$19_01_chp_plants$x$x',
     '19_heat_output_in_pj$19_02_heat_plants$x$x',
+    #own use is the use of energy to produce energy (but not as a feedstock like in non energy). So we do measure it as an emission.
+    '10_losses_and_own_use$10_02_transmission_and_distribution_losses$x$x',
+    '17_nonenergy_use$x$x$x'
 ]
 
 #%%
@@ -607,5 +609,96 @@ all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_
 all_results_simple.to_csv('../output_data/9th_edition_emissions_factors_all_gases_simplified.csv', index=False)
 #%%
 
+
+#####################################################################
+
+#####VALIDATION OF MAPPINGS#####
+
+#####################################################################
+# Function to generate prompts to validate mappings between APEC and IPCC sectors
+# This will compare `aperc_sector` and `aperc_fuel` values with `ipcc_sector` and `ipcc_fuel` from a provided mapping DataFrame to generate prompts for validation
+
+def generate_mapping_prompts(mapping_df, max_prompt_length=64000):
+    """
+    Generate prompts to check if mappings are reasonable between sectors and fuels.
+
+    Parameters:
+    mapping_df (pandas.DataFrame): DataFrame containing the mappings with columns for APEC sectors, fuels, and IPCC equivalents.
+    sector_col (str): Column name for APEC sectors.
+    fuel_col (str): Column name for APEC fuels.
+    ipcc_sector_col (str): Column name for IPCC sectors.
+    ipcc_fuel_col (str): Column name for IPCC fuels.
+    max_prompt_length (int): Maximum character length for a single prompt.
+
+    Returns:
+    List of string prompts to validate sector and fuel mappings.
+    """
+    prompt_intro = (
+        "Please review the following mapping table between APEC sectors and fuels to IPCC sectors and fuels. "
+        "Focus only on the aperc_sector to ipcc_sector mappings and the aperc_fuel to ipcc_fuel mappings rather than across fuels and sectors for example dont comment on if a certain fuel is not likely to be used in a certain sector."
+        "Do not comment on unusual combinations of fuels and sectors. We are aware of such combinations and do not need further feedback on these."
+        "Provide a brief explanation if the mapping seems incorrect or could be improved. Otherwise confirm that the mapping is correct with as few words as possible.\n\n"
+    )
+    
+    # Split DataFrame into smaller chunks if necessary
+    prompts = []
+    current_prompt = prompt_intro
+    current_length = len(current_prompt)
+    for i in range(len(mapping_df)):
+        row_str = mapping_df.iloc[[i]].to_string(index=False) + "\n"
+        row_length = len(row_str)
+        
+        if current_length + row_length > max_prompt_length:
+            # If adding this row would exceed max length, finalize current prompt and start a new one
+            prompts.append(current_prompt)
+            current_prompt = prompt_intro + row_str
+            current_length = len(current_prompt)
+        else:
+            # Otherwise, add the row to the current prompt
+            current_prompt += row_str
+            current_length += row_length
+    
+    # Append the final prompt
+    prompts.append(current_prompt)
+    
+    return prompts
+
+prompts = generate_mapping_prompts(industry_mapping)
+prompts = generate_mapping_prompts(services_mapping)
+prompts = generate_mapping_prompts(transformation_mapping)
+prompts = generate_mapping_prompts(other_mapping)
+prompts = generate_mapping_prompts(residential_mapping)
+prompts = generate_mapping_prompts(transport_mapping)
+#run these one by one in the below:
+#%%
+# Print out the prompts to validate the mappings
+for i, prompt in enumerate(prompts):
+    print(f"Prompt {i+1}:")
+    print(prompt)
+    print()
+    break
+
+# %%
+if len(prompts) >1:
+    print(prompts[1])
+#%%
+if len(prompts) >2:
+    print(prompts[2])
+# %%
+if len(prompts) >3:
+    print(prompts[3])
+# %%
+if len(prompts) >4:
+    print(prompts[4])
+# %%
+if len(prompts) >5:
+    print(prompts[5])
+# %%
+if len(prompts) >6:
+    print(prompts[6])
 #%%
 
+
+# 17_nonenergy_use to 1.A.1 - Energy Industries: This mapping seems unusual, as "non-energy use" typically doesn't fit well under "Energy Industries." Consider reviewing whether a more specific IPCC sector might fit better.
+# 10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants mapped to 1.B.2.b - Oil and Natural Gas for Diesel Oil: It might be worth revisiting whether this should align with the manufacturing or refining sectors instead of fugitive emissions.
+# 04_international_marine_bunkers and 05_international_aviation_bunkers mapped to 1.C.1: These are correctly mapped but would be clearer if directly mapped to 1.A.3 categories for international bunkering activities.
