@@ -218,10 +218,10 @@ combinations= new_emissions_factors_ipcc[['IPCC 2006 Source/Sink Category', 'Fue
 
 #please note that i put all the mappings below into a file called gpt_prompts.py to save space here.
 #%%
-
 aperc_sectors = model_df_wide['aperc_sector'].unique()
 
-transport_combinations = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A.3.b - Road Transportation', '1.A.3.c - Railways', '1.A.3.d - Water-borne Navigation', '1.A.3.a - Civil Aviation',  '1.A.1 - Energy Industries','1.A - Fuel Combustion Activities'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
+transport_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A.3.b - Road Transportation', '1.A.3.c - Railways', '1.A.3.d - Water-borne Navigation', '1.A.3.a - Civil Aviation',  '1.A.1 - Energy Industries','1.A - Fuel Combustion Activities'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+transport_combinations = transport_combinations_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 aperc_transport_combinations = [sector for sector in aperc_sectors if '15_transport_sector' in sector]
 
 #now extract all the fuel sector combos from the model_df_wide_simplified that are in the transport_combinations    
@@ -230,25 +230,29 @@ transport_combinations_model = model_df_wide_simplified.loc[model_df_wide_simpli
 #    '16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x',
 #    '16_other_sector$16_01_buildings$16_01_02_residential$x',
 #And now same for residential:
-residential_combinations = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.4.a - Residential'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
+residential_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.4.a - Residential'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+residential_combinations = residential_combinations_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 
 residential_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(['16_other_sector$16_01_buildings$16_01_02_residential$x'])][['aperc_sector', 'aperc_fuel']].drop_duplicates()
 
 aperc_industry_combinations = [sector for sector in aperc_sectors if '14_industry_sector' in sector]
 services_sectors = ['16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x']
 
-industry_combinations = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.2 - Manufacturing Industries and Construction'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
-
+industry_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.2 - Manufacturing Industries and Construction'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+industry_combinations = industry_combinations_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 industry_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(aperc_industry_combinations)][['aperc_sector', 'aperc_fuel']].drop_duplicates()
 
-services_combinations = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A.4.a - Commercial/Institutional', '1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
+services_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A.4.a - Commercial/Institutional', '1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+services_combinations = services_combinations_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 services_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(services_sectors)][['aperc_sector', 'aperc_fuel']].drop_duplicates()
 
 aperc_transformation_combinations = [sector for sector in aperc_sectors if '09_total_transformation_sector' in sector]
-transformation = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
+transformation_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+transformation = transformation_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 transformation_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(aperc_transformation_combinations)][['aperc_sector', 'aperc_fuel']].drop_duplicates()
 
-other = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.5 - Other'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
+other_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.5 - Other'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+other = other_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 
 completed_sectors =aperc_transformation_combinations + aperc_transport_combinations + ['16_other_sector$16_01_buildings$16_01_02_residential$x'] + aperc_industry_combinations + services_sectors
 other_aperc_combinations = [sector for sector in aperc_sectors if sector not in completed_sectors]
@@ -272,7 +276,7 @@ def save_mappings_to_excel(mappings, file_path):
 def remove_not_needed_mappings(file_path, not_needed_df, sector):
     # Load the mappings from the Excel file
     mappings = load_mappings_from_excel(file_path)
-    
+    breakpoint()
     # Filter out the not needed mappings
     mapping_df = mappings[sector]
     
@@ -374,9 +378,8 @@ results_transformation, left_onlys_transformation = map_sectors(transformation_m
 results_other, left_onlys_other = map_sectors(other_mapping, new_emissions_factors_ipcc)
 
 
-#%%
-# Function to check missing sectors against the model combinations
-def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector):
+#%% Function to check missing sectors against the model combinations
+def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector, PRINT=True):
     mapping_sectors_fuel_combos = mapping_df[[sector_col, fuel_col]].drop_duplicates()
     model_sectors_fuel_combos = model_df[[sector_col, fuel_col]].drop_duplicates()
     
@@ -385,11 +388,13 @@ def check_missing_sectors(mapping_df, model_df, sector_col, fuel_col, sector):
     
     # Extract non-both rows
     missing_from_mapping = combos_merged.loc[combos_merged['_merge'] == 'right_only']
-    if len(missing_from_mapping) > 0:
-        print(f"Warning: for {sector}, {len(missing_from_mapping)} mapping combinations are still missing and need to be mapped\n")
     not_needed_in_mapping = combos_merged.loc[combos_merged['_merge'] == 'left_only']
-    if len(not_needed_in_mapping) > 0:
-        print(f"Warning: for {sector}, {len(not_needed_in_mapping)} mapping combinations are not in the model and need to be removed from the mapping\n")
+    if PRINT:
+        if len(missing_from_mapping) > 0:
+            print(f"Warning: for {sector}, {len(missing_from_mapping)} mapping combinations are still missing and need to be mapped\n")
+        
+        if len(not_needed_in_mapping) > 0:
+            print(f"Warning: for {sector}, {len(not_needed_in_mapping)} mapping combinations are not in the model and need to be removed from the mapping\n")
     return missing_from_mapping, not_needed_in_mapping
 
 #%%
@@ -400,7 +405,6 @@ missing_from_mapping_services, not_needed_in_mapping_services= check_missing_sec
 missing_from_mapping_transformation, not_needed_in_mapping_transformation= check_missing_sectors(transformation_mapping, transformation_combinations_model, 'aperc_sector', 'aperc_fuel', 'transformation')
 
 missing_from_mapping_other, not_needed_in_mapping_other= check_missing_sectors(other_mapping, other_combinations_model, 'aperc_sector', 'aperc_fuel', 'other')
-
 
 missing_from_mapping_residential, not_needed_in_mapping_residential= check_missing_sectors(residential_mapping, residential_combinations_model, 'aperc_sector', 'aperc_fuel', 'residential')
 
@@ -427,19 +431,23 @@ if DO_THIS:
     remove_not_needed_mappings(mappings_file_path, left_onlys_other[['aperc_sector','aperc_fuel']], 'other')
 #%%
 # Function to create prompts for missing sector and fuel combinations
-def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col, original_combinations_df, industry_tag):
+def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col, original_combinations_df, industry_tag, BY_GAS_PROMPT=False):
     # Create a prompt for ChatGPT to provide new mappings in a format that can be entered directly into the Excel file
     prompt = "Please provide the most likely IPCC 2006 Source/Sink Category and Fuel 2006 combinations for the aperc_sector and aperc_fuel combinations and put it in a tabular format that can be directly entered into an Excel sheet. The columns should be: 'aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel'.\n"
-    if industry_tag != 'transformation':
+    if industry_tag != 'transformation' and BY_GAS_PROMPT == False:
         prompt += f"(For the IPCC sector categories, try to prioritize mapping using the {industry_tag} related sectors rather than the 1.A.1 - Energy Industries sector.)\n"
-    else:
+    elif BY_GAS_PROMPT == False:
         prompt += f"(For the IPCC sector categories, try to prioritize mapping using the 1.A - Fuel Combustion Activities sector.)\n"
     prompt += "The following aperc_sector and aperc_fuel combinations are missing from the model:\n"
     prompt += missing_sectors_df[[sector_col, fuel_col]].to_string(index=False)
-    prompt += "\n\nThese need to be mapped to IPCC 2006 Source/Sink Category and Fuel 2006 combinations. These combinations are:\n"
+    prompt += "\n\nThese need to be mapped to the following IPCC 2006 Source/Sink Category and Fuel 2006 combinations. These combinations are:\n"
     prompt += original_combinations_df.to_string(index=False)
     prompt += "\n\nPlease provide the mappings in a tabular format  so that each entry is separated by a tab so that it can be directly pasted into an Excel sheet with the columns as described above."
     
+    if BY_GAS_PROMPT:
+        #make the prompt extra particular about match only the mappings ive provided.
+        prompt += "\n\n You must only provide mappings for IPCC 2006 Source/Sink Category and Fuel 2006 combinations that are in the list above. Do not provide any other mappings from your own knowledge."
+        
     return prompt
 
 
@@ -477,15 +485,156 @@ if len(missing_from_mapping_transport) > 0:
 #IN 17 OCT I GOT TOLDBY CHATGPT THAT I HAD 5 RESPONSES FROM 01PREVIEW REMAINING FOR 7 DAYS LOL
 #%%
 
-#merge them all together
+
+
+###########################################################################
+# SPECIFIED BY GAS #sorry this bit is a bit complicated.In the future it might be better to do all of the above by gas and cut out this part, but also this bit has a pretty minimal workload so its not a big deal.
+# # ########################################################
+
+#load in the SECTOR_missing_by_gas sheets:
+industry_missing_by_gas = mappings['industry_missing_by_gas']
+services_missing_by_gas = mappings['services_missing_by_gas']
+transformation_missing_by_gas = mappings['transformation_missing_by_gas']
+other_missing_by_gas = mappings['other_missing_by_gas']
+residential_missing_by_gas = mappings['residential_missing_by_gas']
+transport_missing_by_gas = mappings['transport_missing_by_gas']
+
+sector_dict = {
+    'industry': [results_industry, industry_combinations_gas, industry_combinations_model, industry_missing_by_gas],
+    'services': [results_services, services_combinations_gas, services_combinations_model, services_missing_by_gas],
+    'transformation': [results_transformation, transformation_gas, transformation_combinations_model, transformation_missing_by_gas],
+    'other': [results_other, other_gas, other_combinations_model, other_missing_by_gas],
+    'residential': [results_residential, residential_combinations_gas, residential_combinations_model, residential_missing_by_gas],
+    'transport': [results_transport, transport_combinations_gas, transport_combinations_model, transport_missing_by_gas]
+}
+sector_prompts_dict = {}
+new_results_dict = {}
+#%%
+for sector in sector_dict.keys():
+    results, original_combinations, all_combinations_model, dfs_missing_by_gas = sector_dict[sector]
+    sector_results = pd.DataFrame()
+    for gas in ['CARBON DIOXIDE','METHANE', 'NITROUS OXIDE']:
+        gas_results = results.loc[results['Gas'] == gas].drop(columns=['_merge'])
+        gas_combinations = original_combinations.loc[original_combinations['Gas'] == gas]
+        
+        ###
+        #check if any of the values in all_combinations_model are missing from the gas_results:
+        missing_rows = gas_results.merge(all_combinations_model, on=['aperc_sector', 'aperc_fuel'], how='right', indicator=True).copy()
+        missing_rows = missing_rows.loc[missing_rows['_merge'] == 'right_only']
+        if len(missing_rows) > 0:
+                
+            
+            #fill in the gas results with the dfs_missing_by_gas if there are any:
+            if len(dfs_missing_by_gas) > 0:
+                missing_by_gas = dfs_missing_by_gas.loc[dfs_missing_by_gas['Gas'] == gas]
+                #double check for duplicates:
+                if len(missing_by_gas.loc[missing_by_gas.duplicated()]) > 0:
+                    raise ValueError(f'There are duplicates in the {sector}_missing_by_gas df for {gas}')
+                gas_results = pd.merge(gas_results, missing_by_gas, on=['aperc_sector', 'aperc_fuel', 'Gas'], how='outer', indicator=True, suffixes=('', '_y'))
+                #ignore left onlys as they are where we have data and its not in missing_by_gas. if there are right onlys then we will need to add those to the gas_results since they are new mappings from the missing_by_gas sheet
+                #and for both, we should remvoe those rows from the  missing_by_gas sheet sicne they have been dealt with in the main process and sheet:
+                right_onlys = gas_results.loc[gas_results['_merge'] == 'right_only']
+                both = gas_results.loc[gas_results['_merge'] == 'both'][['aperc_sector', 'aperc_fuel', 'ipcc_sector', 'ipcc_fuel', 'Gas']]
+                if len(right_onlys) > 0:
+                    right_onlys = right_onlys[['aperc_sector', 'aperc_fuel', 'ipcc_sector_y', 'ipcc_fuel_y', 'Gas']].rename(columns={'ipcc_sector_y': 'ipcc_sector', 'ipcc_fuel_y': 'ipcc_fuel'})
+                    #now join to new_emissions_factors_ipcc 
+                    right_onlys = pd.merge(right_onlys, new_emissions_factors_ipcc, left_on=['ipcc_sector', 'ipcc_fuel', 'Gas'], right_on=['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas'], how='left', indicator=True) 
+                    #if there are any left onlys then throw an error since this shoudlnt happen and they should be removed from the missing_by_gas sheet
+                    left_onlys = right_onlys.loc[right_onlys['_merge'] == 'left_only']
+                    if len(left_onlys) > 0:
+                        print(f"Warning: {len(left_onlys)} rows in the missing_by_gas sheet are missing from the emissions factors. This should not happen.")
+                        print(left_onlys)
+                        raise ValueError
+                    
+                    #remove the old rows in our resutls for this sector and gas and then add the new ones
+                    gas_results = gas_results.loc[~(gas_results['_merge'] == 'right_only')]
+                    gas_results = pd.concat([gas_results, right_onlys])
+                    #now weve added in the msising rows from the missing_by_gas sheet.
+                    
+                #now remove the rows from the missing_by_gas sheet that are in both
+                if len(both) > 0:
+                    #quickly check both for duplicates:
+                    if len(both.loc[both.duplicated()]) > 0:
+                        raise ValueError('There are duplicates in the both df')
+                    remove_not_needed_mappings(mappings_file_path, both, f'{sector}_missing_by_gas')
+                    
+                gas_results.drop(columns=['ipcc_sector_y', 'ipcc_fuel_y', '_merge'], inplace=True)   
+                
+            #now we have the gas_results with the missing_by_gas rows added in (if there were any). we can now check for additioanl missing sectors and fuels and create a prompt for them:
+            missing_rows = gas_results.merge(all_combinations_model, on=['aperc_sector', 'aperc_fuel'], how='right', indicator=True).copy()
+            missing_rows = missing_rows.loc[missing_rows['_merge'] == 'right_only']
+            if len(missing_rows) > 0:
+                
+                print(f'For {gas} in {sector}, {len(missing_rows)} mapping combinations are still missing from the model and can be mapped to the ipcc_sector and ipcc_fuel combinations.')
+                #create a prompt and put it in the dict
+                sector_prompts_dict[sector] = create_missing_sectors_fuel_prompts(missing_rows, 'aperc_sector', 'aperc_fuel', gas_combinations.drop(columns=['Gas']), sector, BY_GAS_PROMPT=True)
+        sector_results = pd.concat([sector_results, gas_results])
+    #and now we can add the sector_results to the new_results_dict
+    new_results_dict[sector] = sector_results
+
+#now print out the prompts one by one and input them to chatgpt
+#%%
+if 'industry' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['industry'])
+    print('\n\n')
+results_industry = new_results_dict['industry']
+#%%
+if 'services' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['services'])
+    print('\n\n')
+results_services = new_results_dict['services']
+#%%
+if 'transformation' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['transformation'])
+    print('\n\n')
+results_transformation = new_results_dict['transformation']
+#%%
+if 'transport' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['transport'])
+    print('\n\n')
+results_transport = new_results_dict['transport']
+#%%
+if 'other' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['other'])
+    print('\n\n')
+results_other = new_results_dict['other']
+#%%
+if 'residential' in sector_prompts_dict.keys():
+    print(sector_prompts_dict['residential'])
+    print('\n\n')
+results_residential = new_results_dict['residential']
+
+        
+#%%
+#concat them all together
 all_results = pd.concat([results_industry, results_services, results_transformation, results_other, results_residential, results_transport])
 
-all_results.drop(columns=['_merge'], inplace=True)
+
 #%%
+       
+#we sometimes have issues where a mapping is only available for some of the gas types. check that every combination of aperc_sector and aperc_fuel has every combo of gas too!
+combinations = all_results[['aperc_sector', 'aperc_fuel']].drop_duplicates()
+#add the three gas types to the combinations
+combinations_copy = combinations.copy()
+combinations = pd.DataFrame(columns=['aperc_sector', 'aperc_fuel', 'Gas'])
+for gas in all_results.Gas.unique():
+    combinations_copy['Gas'] = gas
+    combinations = pd.concat([combinations_copy, combinations])
+
+#now merge the results with the combinations to see what is missing
+combinations = combinations.merge(all_results[['aperc_sector', 'aperc_fuel', 'Gas']].drop_duplicates(), on=['aperc_sector', 'aperc_fuel', 'Gas'], how='outer', indicator=True)
+missing_gas_combos = combinations.loc[combinations['_merge'] == 'left_only']
+if len(missing_gas_combos) > 0:
+    print(f"Warning: {len(missing_gas_combos)} combinations of aperc_sector and aperc_fuel are missing gas combinations. They probably need to be mapped.")
+    print(missing_gas_combos)
+    raise ValueError
+
+#%%
+
 #check there are no duplicates in the aperc_sector	aperc_fuel columns
 duplicates = all_results[['aperc_sector', 'aperc_fuel', 'Gas']].loc[all_results[['aperc_sector', 'aperc_fuel', 'Gas']].duplicated()]
 if len(duplicates) > 0:
-    print(f"Warning: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns")
+    raise ValueError(f"Warning: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns")
 
 #%%
 #check that the missing sectors and fuels are jsut the ones we expect. do this by joininig model_df_wide_copy to all_results, checking what is missing and then checking that the missing values are the ones we expect:
@@ -521,10 +670,29 @@ all_results['sub3sectors'] = all_results['aperc_sector'].str.split('$').str[3]
 
 all_results['fuels'] = all_results['aperc_fuel'].str.split('$').str[0]
 all_results['subfuels'] = all_results['aperc_fuel'].str.split('$').str[1]
+#%%
+
+# #as a test, extract sectors == 15_transport_sector and subfuels ==07_07_gas_diesel_oil
+# test = all_results.loc[(all_results['sectors'] == '15_transport_sector') & (all_results['subfuels'] == '07_07_gas_diesel_oil')]
+# test2 = model_df_wide_original_wide_copy.loc[(model_df_wide_original_wide_copy['sectors'] == '15_transport_sector') & (model_df_wide_original_wide_copy['subfuels'] == '07_07_gas_diesel_oil')]
+
+# #join them
+
+# test = test.merge(test2[['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors','sub4sectors', 'fuels', 'subfuels', 'aperc_sector', 'aperc_fuel']].drop_duplicates(), on=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels','aperc_sector', 'aperc_fuel'], how='outer', indicator=True)
+#%%
+#create model_df_wide_original_wide_copy with all three gases
+model_df_wide_original_wide_copy1 = model_df_wide_original_wide_copy.copy()
+model_df_wide_original_wide_copy1['Gas'] = 'CARBON DIOXIDE'
+model_df_wide_original_wide_copy2 = model_df_wide_original_wide_copy.copy()
+model_df_wide_original_wide_copy2['Gas'] = 'METHANE'
+model_df_wide_original_wide_copy3 = model_df_wide_original_wide_copy.copy()
+model_df_wide_original_wide_copy3['Gas'] = 'NITROUS OXIDE'
+model_df_wide_original_wide_copy = pd.concat([model_df_wide_original_wide_copy1, model_df_wide_original_wide_copy2, model_df_wide_original_wide_copy3])
+#%%
 
 #join on sub4sectors as well as all other combinations of sectors and fuels. we will label where the sector or fuel is not applicable or no emissions as well as where the sector fuel combination does not have any energy use.
-all_results = all_results.merge(model_df_wide_original_wide_copy[['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors','sub4sectors', 'fuels', 'subfuels', 'aperc_sector', 'aperc_fuel']].drop_duplicates(), on=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels','aperc_sector', 'aperc_fuel'], how='outer', indicator=True)
-
+all_results = all_results.merge(model_df_wide_original_wide_copy[['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors','sub4sectors', 'fuels', 'subfuels', 'aperc_sector', 'aperc_fuel', 'Gas']].drop_duplicates(), on=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels','aperc_sector', 'aperc_fuel', 'Gas'], how='outer', indicator=True)
+#%%
 #create columns called 'Sector not applicable' and 'Fuel not applicable' and set to True or False based on the sector or fuel being in the not_applicable_sectors or zero_emissions_fuels lists.
 #and also a column called 'No energy use' which is True if the value is in the invalid rows df
 
@@ -540,19 +708,31 @@ if len(all_results.loc[all_results['_merge'] == 'right_only']) > 0:
 #and where merge is both, set 'No expected energy use' to True
 all_results['No expected energy use'] = False
 all_results.loc[all_results['_merge'] == 'both', 'No expected energy use'] = True
-
+#%%
 #drop the merge col
 all_results.drop(columns=['_merge'], inplace=True)
-
-#where one of these (Sector not applicable	Fuel not applicable	_merge	No expected energy use) is True, make sure we have that row for every gas. And set the Value to nan. This is all because we want it to be clear that we have delibarately set these values to nan instead of them being missing.
-nans_to_keep = all_results.loc[all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable']].copy()
-all_results = all_results.loc[~(all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable'])]
-nans_to_keep['Value'] = np.nan
-for gas in ['CARBON DIOXIDE', 'METHANE', 'NITROUS OXIDE']:
-    nans_to_keep['Gas'] = gas
-    all_results = pd.concat([all_results, nans_to_keep])
+#%%
+# #where one of these (Sector not applicable	Fuel not applicable	_merge	No expected energy use) is True, make sure we have that row for every gas. And set the Value to nan. This is all because we want it to be clear that we have delibarately set these values to nan instead of them being missing.
+# nans_to_keep = all_results.loc[all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable']].copy()
+# all_results = all_results.loc[~(all_results['No expected energy use'] | all_results['Sector not applicable'] | all_results['Fuel not applicable'])]
+# nans_to_keep['Value'] = np.nan
+# for gas in ['CARBON DIOXIDE', 'METHANE', 'NITROUS OXIDE']:
+#     nans_to_keep['Gas'] = gas
+#     all_results = pd.concat([all_results, nans_to_keep])
     
-#check there are no more nans in gas col:
+#double check that every unique combination of aperc_sector, aperc_fuel has every gas type
+unique_combos = all_results[['aperc_sector', 'aperc_fuel']].drop_duplicates()
+for gas in ['CARBON DIOXIDE', 'METHANE', 'NITROUS OXIDE']:
+    unique_combos['Gas'] = gas
+    merge = pd.merge(all_results, unique_combos, on=['aperc_sector', 'aperc_fuel', 'Gas'], how='outer', indicator=True)
+    missing = merge.loc[merge['_merge'] == 'right_only']
+    if len(missing) > 0:
+        print(f'Warning: {len(missing)} combinations of aperc_sector and aperc_fuel are missing gas combinations. They probably need to be mapped.')
+        print(missing)
+        raise ValueError
+    
+#%%
+#check there are no nans in gas col:
 nans = all_results.loc[all_results['Gas'].isna()]
 if len(nans) > 0:
     breakpoint()
@@ -601,7 +781,7 @@ all_results_simple = all_results[['Unit', 'Gas', 'CO2e emissions factor', 'secto
 #chekc for udplicates
 duplicates = all_results_simple.loc[all_results_simple.duplicated()]
 if len(duplicates) > 0:
-    print(f"Warning: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns, {duplicates}")
+    raise ValueError(f"ERROR: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns, {duplicates}")
 #%%
 #save to csv
 all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_details.csv', index=False)
