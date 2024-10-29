@@ -8,7 +8,7 @@ import numpy as np
 import os
 from datetime import datetime
 import shutil
-model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')
+model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241029.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
 gwp_dict = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
 #then print all the unique values in the IPCC 2006 Source/Sink Category column and map them to all the unique vategories in the model_df_wide['sectors'] column < we might ahve to create a concat of all the subsectors columns in mdoel_df_wide to get more precise mappings
@@ -230,7 +230,7 @@ transport_combinations_model = model_df_wide_simplified.loc[model_df_wide_simpli
 #    '16_other_sector$16_01_buildings$16_01_01_commercial_and_public_services$x',
 #    '16_other_sector$16_01_buildings$16_01_02_residential$x',
 #And now same for residential:
-residential_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.4.a - Residential'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
+residential_combinations_gas = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['IPCC 2006 Source/Sink Category'].isin(['1.A - Fuel Combustion Activities', '1.A.1 - Energy Industries', '1.A.4.b - Residential'])][['IPCC 2006 Source/Sink Category', 'Fuel 2006', 'Gas']].drop_duplicates()
 residential_combinations = residential_combinations_gas[['IPCC 2006 Source/Sink Category', 'Fuel 2006']].drop_duplicates()
 
 residential_combinations_model = model_df_wide_simplified.loc[model_df_wide_simplified['aperc_sector'].isin(['16_other_sector$16_01_buildings$16_01_02_residential$x'])][['aperc_sector', 'aperc_fuel']].drop_duplicates()
@@ -450,38 +450,46 @@ def create_missing_sectors_fuel_prompts(missing_sectors_df, sector_col, fuel_col
         
     return prompt
 
+#%%
+MISSING_MAPPINGS = False
 
 #basically just print these out individaully and input them to chatgpt then extract the dict output and put it in the mappings in the gpt_prompts.py file. no doubt chatgpt will miss ome so we will need to do this a few times and potentially fix some of the mappings manually.
 if len(missing_from_mapping_industry) > 0:
     industry_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_industry, 'aperc_sector', 'aperc_fuel', industry_combinations, 'industry')
     print(industry_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #%%
 if len(missing_from_mapping_services) > 0:
     services_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_services, 'aperc_sector', 'aperc_fuel', services_combinations, 'services')
     print(services_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #%%
 if len(missing_from_mapping_transformation) > 0:
     transformation_prompt = create_missing_sectors_fuel_prompts(
     missing_from_mapping_transformation, 'aperc_sector', 'aperc_fuel', transformation, 'transformation')
     print(transformation_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #%%
 if len(missing_from_mapping_other) > 0:
     other_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_other, 'aperc_sector', 'aperc_fuel', other, 'other')
     print(other_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #%%
 if len(missing_from_mapping_residential) > 0:
     residential_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_residential, 'aperc_sector', 'aperc_fuel', residential_combinations, 'residential')
     print(residential_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #%%
 if len(missing_from_mapping_transport) > 0:
     transport_prompt = create_missing_sectors_fuel_prompts(missing_from_mapping_transport, 'aperc_sector', 'aperc_fuel', transport_combinations, 'transport')
     print(transport_prompt)
     print('\n\n')
+    MISSING_MAPPINGS = True
 #IN 17 OCT I GOT TOLDBY CHATGPT THAT I HAD 5 RESPONSES FROM 01PREVIEW REMAINING FOR 7 DAYS LOL
 #%%
 
@@ -491,6 +499,8 @@ if len(missing_from_mapping_transport) > 0:
 # SPECIFIED BY GAS #sorry this bit is a bit complicated.In the future it might be better to do all of the above by gas and cut out this part, but also this bit has a pretty minimal workload so its not a big deal.
 # # ########################################################
 
+if MISSING_MAPPINGS:
+    raise ValueError('Please provide the missing mappings for all gases before continuing with checking the mappings by gas')
 #load in the SECTOR_missing_by_gas sheets:
 industry_missing_by_gas = mappings['industry_missing_by_gas']
 services_missing_by_gas = mappings['services_missing_by_gas']
@@ -573,6 +583,7 @@ for sector in sector_dict.keys():
     new_results_dict[sector] = sector_results
 
 #now print out the prompts one by one and input them to chatgpt
+print('FOR THE FOLLOWING PROMPTS, PLEASE INPUT THE MAPPINGS TO CHATGPT AND THEN ADD THEM TO THE MAPPINGS FILE BIT ONLY IN THE SHEETS WHICH HAVE _missing_by_gas AT THE END')
 #%%
 if 'industry' in sector_prompts_dict.keys():
     print(sector_prompts_dict['industry'])
@@ -741,7 +752,7 @@ if len(nans) > 0:
 #%%
 #convert everything to mt/pj (from kg/tj)
 all_results['Value'] = all_results['Value'].astype(float)
-all_results['Value'] = all_results['Value'] / 1000
+all_results['Value'] = all_results['Value'] / 1000000
 all_results['Unit'] = 'Mt/PJ'
 #create a column alled co2e emissions factor and set it to the value times the GWP based on the Gas column. then rename Value to Original emissions factor.
 all_results['GWP'] = all_results['Gas'].map(gwp_dict)
@@ -784,9 +795,11 @@ if len(duplicates) > 0:
     raise ValueError(f"ERROR: {len(duplicates)} duplicates in the aperc_sector	aperc_fuel columns, {duplicates}")
 #%%
 #save to csv
-all_results.to_csv('../output_data/9th_edition_emissions_factors_all_gases_IPCC_details.csv', index=False)
+#create filedate id
+filedate = datetime.now().strftime("%Y%m%d_%H%M%S")
+all_results.to_csv(f'../output_data/9th_edition_emissions_factors_all_gases_IPCC_details_{filedate}.csv', index=False)
 
-all_results_simple.to_csv('../output_data/9th_edition_emissions_factors_all_gases_simplified.csv', index=False)
+all_results_simple.to_csv(f'../output_data/9th_edition_emissions_factors_all_gases_simplified_{filedate}.csv', index=False)
 #%%
 
 
@@ -882,3 +895,17 @@ if len(prompts) >6:
 # 17_nonenergy_use to 1.A.1 - Energy Industries: This mapping seems unusual, as "non-energy use" typically doesn't fit well under "Energy Industries." Consider reviewing whether a more specific IPCC sector might fit better.
 # 10_losses_and_own_use$10_01_own_use$10_01_02_gas_works_plants mapped to 1.B.2.b - Oil and Natural Gas for Diesel Oil: It might be worth revisiting whether this should align with the manufacturing or refining sectors instead of fugitive emissions.
 # 04_international_marine_bunkers and 05_international_aviation_bunkers mapped to 1.C.1: These are correctly mapped but would be clearer if directly mapped to 1.A.3 categories for international bunkering activities.
+
+#####################################
+
+
+
+
+
+
+
+#%%
+#compare the emissions factors by fuel type to the new emissions factors. since there are a range of meisisons factors for each fuel we should probably just compare the mean and median of the emissions factors for each fuel type.
+
+
+
