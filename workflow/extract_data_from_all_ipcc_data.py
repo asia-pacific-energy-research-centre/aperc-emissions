@@ -8,9 +8,15 @@ import numpy as np
 import os
 from datetime import datetime
 import shutil
+import utility_functions as utils
+
 model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241029.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
-gwp_dict = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
+gwp_dict_100_years = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}
+gwp_dict_20_years = {'CARBON DIOXIDE': 1, 'METHANE': 86, 'NITROUS OXIDE': 268}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
+gtp_dict_estimates_20_years = {'CARBON DIOXIDE': 1, 'METHANE': 67, 'NITROUS OXIDE': 234}#https://chatgpt.com/share/67317b35-f960-8000-8117-c09853d05fa0
+gtp_dict_estimates_100_years = {'CARBON DIOXIDE': 1, 'METHANE': 6, 'NITROUS OXIDE': 234}#https://chatgpt.com/share/67317b35-f960-8000-8117-c09853d05fa0
+
 #then print all the unique values in the IPCC 2006 Source/Sink Category column and map them to all the unique vategories in the model_df_wide['sectors'] column < we might ahve to create a concat of all the subsectors columns in mdoel_df_wide to get more precise mappings
 #%%
 
@@ -25,6 +31,11 @@ def archive_mappings(file_path, archive_folder='../config/archive/'):
 archive_mappings(mappings_file_path)
 
 #%%
+#if not already there, add in some rows from input_data/additional_missing_rows_to_add_to_EBT_input.csv - these are added when we know we need these rows but for watever reason havent got them in the input data.
+new_rows = pd.read_csv('../input_data/additional_missing_rows_to_add_to_EBT_input.csv')
+#%%
+model_df_wide_original = pd.concat([model_df_wide_original, new_rows], ignore_index=True)
+
 
 ############################
 #firrst set up the model_df_wide df to make it easier to work with:
@@ -101,7 +112,8 @@ zero_emissions_fuels = [
     '18_heat$x',
     '19_total$x',
     '20_total_renewables$x',
-    '21_modern_renewables$x'
+    '21_modern_renewables$x',
+    '17_x_green_electricity',
 ]
 not_applicable_sectors = [
     '01_production$x$x$x',
@@ -755,7 +767,20 @@ all_results['Value'] = all_results['Value'].astype(float)
 all_results['Value'] = all_results['Value'] / 1000000
 all_results['Unit'] = 'Mt/PJ'
 #create a column alled co2e emissions factor and set it to the value times the GWP based on the Gas column. then rename Value to Original emissions factor.
-all_results['GWP'] = all_results['Gas'].map(gwp_dict)
+
+# gwp_dict_100_years = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}
+# gwp_dict_20_years = {'CARBON DIOXIDE': 1, 'METHANE': 86, 'NITROUS OXIDE': 268}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
+# gtp_dict_estimates_20_years = {'CARBON DIOXIDE': 1, 'METHANE': 67, 'NITROUS OXIDE': 234}#https://chatgpt.com/share/67317b35-f960-8000-8117-c09853d05fa0
+# gtp_dict_estimates_100_years = {'CARBON DIOXIDE': 1, 'METHANE': 6, 'NITROUS OXIDE': 234}#https://chatgpt.com/share/67317b35-f960-8000-8117-c09853d05fa0
+#%%
+all_results_pre_GWP = all_results.copy()
+all_results['GWP_100'] = all_results['Gas'].map(gwp_dict_100_years)
+all_results['GWP_20'] = all_results['Gas'].map(gwp_dict_20_years)
+all_results['GTP_100'] = all_results['Gas'].map(gtp_dict_estimates_100_years)
+all_results['GTP_20'] = all_results['Gas'].map(gtp_dict_estimates_20_years)
+#melt so we can put all GWP and GTP values in one column
+all_results = pd.melt(all_results, id_vars=['Unit', 'Gas', 'Value', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors', 'fuels', 'subfuels', 'aperc_sector', 'aperc_fuel', 'ipcc_sector','ipcc_fuel', 'Sector not applicable', 'Fuel not applicable', 'No expected energy use'], value_vars=['GWP_100', 'GWP_20', 'GTP_100', 'GTP_20'], var_name='GWP_type', value_name='GWP')
+
 all_results['CO2e emissions factor'] = all_results['Value'] * all_results['GWP']
 all_results.rename(columns={'Value': 'Original emissions factor'}, inplace=True)
 
@@ -787,7 +812,7 @@ all_results.drop(columns=['aperc_sector', 'aperc_fuel', 'ipcc_sector','ipcc_fuel
 #        'sub1sectors', 'sub2sectors', 'sub3sectors', 'fuels', 'subfuels',
 #        'sub4sectors', 'Sector not applicable', 'Fuel not applicable',
 #        'No expected energy use',
-all_results_simple = all_results[['Unit', 'Gas', 'CO2e emissions factor', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors','fuels', 'subfuels', 'Sector not applicable', 'Fuel not applicable', 'No expected energy use']].copy()
+all_results_simple = all_results[['Unit', 'Gas', 'CO2e emissions factor', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors','fuels', 'subfuels', 'Sector not applicable', 'Fuel not applicable', 'No expected energy use', 'GWP_type', 'GWP']].copy()
 
 #chekc for udplicates
 duplicates = all_results_simple.loc[all_results_simple.duplicated()]

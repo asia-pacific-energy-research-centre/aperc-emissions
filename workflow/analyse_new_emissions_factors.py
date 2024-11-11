@@ -7,12 +7,16 @@ import numpy as np
 import os
 from datetime import datetime
 import shutil
+import utility_functions as utils
 
 #load in the pre co2e update emissions factors
 pre_co2e_update = pd.read_csv('../output_data/9th_edition_emissions_factors_PRE_CO2E_UPDATE.csv')
 # %%
-new_emissions_factors_ipcc = pd.read_csv('../output_data/9th_edition_emissions_factors_all_gases_simplified.csv')
+file = utils.find_most_recent_file_date_id('../output_data/', '9th_edition_emissions_factors_all_gases_simplified', RETURN_DATE_ID = False)
+new_emissions_factors_ipcc = pd.read_csv(f'../output_data/{file}')
 
+#drop green electricity if its int ehre in the fuels col
+new_emissions_factors_ipcc = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['fuels'] != '17_x_green_electricity']
 #%%
 # And load in model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv') to weight our new emissions factors by the energy use of each fuel type, so we can get a more accurate comparison of the emissions factors by fuel type.
 model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')#'scenarios', 'economy', 'sectors', 'sub1sectors', 'sub2sectors',
@@ -47,6 +51,7 @@ new_emissions_factors_ipcc = new_emissions_factors_ipcc[new_emissions_factors_ip
 new_emissions_factors_ipcc = new_emissions_factors_ipcc[new_emissions_factors_ipcc['Fuel not applicable'] == False]
 new_emissions_factors_ipcc = new_emissions_factors_ipcc[new_emissions_factors_ipcc['No expected energy use'] == False]
 
+new_emissions_factors_ipcc_copy = new_emissions_factors_ipcc.copy()
 #and get wher the Gas is CARBON DIOXIDE
 new_emissions_factors_ipcc = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['Gas'] == 'CARBON DIOXIDE']
 #calcualte weighted average emissions factor by fuel type as well as the mean and median emissions factor by fuel type.
@@ -132,6 +137,43 @@ import plotly.express as px
 #make teh bars side by side rather than stacked
 fig = px.bar(merged_emissions_factors, x='fuel', y='emissions factor', color='emissions factor measure', title='Emissions factors by fuel type before and after CO2e update', barmode='group')
 fig.write_html('../plotting_output/emissions_factors_by_fuel_type_before_and_after_CO2e_update.html')
+#%%
+
+#lets also plot the new eeissions factors for each gas. put them on a faceted plot with independent axes and use a strip plot to show how they are distributed.
+new_emissions_factors_ipcc_gas = new_emissions_factors_ipcc_copy.copy()
+new_emissions_factors_ipcc_gas = new_emissions_factors_ipcc_gas[['CO2e emissions factor','Gas', 'fuels', 'subfuels', 'sectors',	'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors', 'GWP_type']]
+
+#add together the sectors and subsectors
+new_emissions_factors_ipcc_gas['_sectors'] = new_emissions_factors_ipcc_gas['sectors']
+new_emissions_factors_ipcc_gas['sectors'] = new_emissions_factors_ipcc_gas['sectors'] + ' ' + new_emissions_factors_ipcc_gas['sub1sectors']
+new_emissions_factors_ipcc_gas = new_emissions_factors_ipcc_gas.drop(columns=['sub1sectors'])
+for GWP_type in new_emissions_factors_ipcc_gas['GWP_type'].unique():
+    #create a unique plot for this fuel. we will add them all to one dashboard afterwards:
+    data  = new_emissions_factors_ipcc_gas.loc[new_emissions_factors_ipcc_gas['GWP_type'] == GWP_type]
+    fig = px.strip(data, x='fuels', y='CO2e emissions factor', facet_row='Gas', title=f'Emissions factors by gas and sector (GWP type: {GWP_type})', hover_data=['subfuels','sub2sectors', 'sub3sectors', 'sub4sectors'], color='_sectors')
+    fig = fig.update_traces(marker=dict(size=4))
+    fig = fig.update_layout(showlegend=False)
+    fig.update_yaxes(matches=None)
+    fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+    fig.write_html(f'../plotting_output/emissions_factors_by_gas_and_sector_STRIP_{GWP_type}.html')
+    
+# fig = px.strip(new_emissions_factors_ipcc_gas, x='fuels', y='CO2e emissions factor', facet_row='Gas', title='Emissions factors by gas and sector', hover_data=['subfuels','sub2sectors', 'sub3sectors', 'sub4sectors'], color='_sectors')
+#make the dots smaller
+fig = fig.update_traces(marker=dict(size=4))
+fig = fig.update_layout(showlegend=False)
+
+fig.update_yaxes(matches=None)
+fig.for_each_yaxis(lambda yaxis: yaxis.update(showticklabels=True))
+fig.write_html('../plotting_output/emissions_factors_by_gas_and_sector_STRIP.html')
+
+#%%
+#and lastly to show the average emissions factor for each gas and gwp type, we will create a bar chart:
+
+avg_emissions_factors_by_gas = new_emissions_factors_ipcc_gas.groupby(['Gas', 'fuels', 'GWP_type']).mean(numeric_only=True).reset_index()
+
+fig = px.bar(avg_emissions_factors_by_gas, x='fuels', y='CO2e emissions factor', color='Gas', title='Average emissions factors by gas and fuel type \n(CO2e)', barmode='group', facet_row='GWP_type', facet_col_wrap=3)
+fig.write_html('../plotting_output/average_emissions_factors_by_gas_GWP_and_fuel_type_BAR.html')
+
 #%%
 
 # #they all look pretty similar. so lets now create a set of boxplots where the fuel is the samebetween the two dataframes. we will use the original emissions factors and hsow all of the emissions factors for each fuel type in a boxplot, with the old ones highlighted in red and the new ones in blue.
