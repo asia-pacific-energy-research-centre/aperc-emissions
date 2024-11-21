@@ -15,8 +15,6 @@ pre_co2e_update = pd.read_csv('../output_data/9th_edition_emissions_factors_PRE_
 file = utils.find_most_recent_file_date_id('../output_data/', '9th_edition_emissions_factors_all_gases_simplified', RETURN_DATE_ID = False)
 new_emissions_factors_ipcc = pd.read_csv(f'../output_data/{file}')
 
-#drop green electricity if its int ehre in the fuels col
-new_emissions_factors_ipcc = new_emissions_factors_ipcc.loc[new_emissions_factors_ipcc['fuels'] != '17_x_green_electricity']
 #%%
 # And load in model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv') to weight our new emissions factors by the energy use of each fuel type, so we can get a more accurate comparison of the emissions factors by fuel type.
 model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')#'scenarios', 'economy', 'sectors', 'sub1sectors', 'sub2sectors',

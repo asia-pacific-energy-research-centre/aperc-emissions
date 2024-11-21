@@ -94,92 +94,72 @@ print('dropped {} rows'.format(previous_row_number-len(model_df_wide_simplified)
 print('dropped rows: {}'.format(dropped_rows))
 #%%
 
-zero_emissions_fuels = [
-    '09_nuclear$x',
-    '10_hydro$x',
-    '11_geothermal$x',
-    '12_solar$12_01_of_which_photovoltaics',
-    '12_solar$12_x_other_solar',
-    '12_solar$x',
-    '13_tide_wave_ocean$x',
-    '14_wind$x',
+zero_emissions_fuels_broad_categories = [
+    '09_nuclear',
+    '10_hydro',
+    '11_geothermal',
+    '12_solar',
+    '13_tide_wave_ocean',
+    '14_wind',
+    
     '16_others$16_09_other_sources',
-    '16_others$16_x_ammonia',
-    '16_others$16_x_efuel',
+    '16_others$16_x_ammonia',#these fuels do have emissions but we dont have an emissions factor for them from the IPCC so we will drop them. But usually we remove them when actually clacalting emissions since they are net zero
+    '16_others$16_x_efuel',#these fuels do have emissions but we dont have an emissions factor for them from the IPCC so we will drop them. But usually we remove them when actually clacalting emissions since they are net zero
     '16_others$16_x_hydrogen',
+    # '16_others$16_06_biodiesel', #these fuels have emisions so we will keep them. But usually we remove them when actually clacalting emissions since they are net zero
+    # '16_others$16_07_bio_jet_kerosene',#these fuels have emisions so we will keep them. But usually we remove them when actually clacalting emissions since they are net zero
     '16_others$x',
-    '17_electricity$x',
-    '18_heat$x',
-    '19_total$x',
-    '20_total_renewables$x',
-    '21_modern_renewables$x',
+    
+    '17_electricity',
+    '18_heat',
+    '19_total',
+    '20_total_renewables',
+    '21_modern_renewables',
     '17_x_green_electricity',
+
 ]
-not_applicable_sectors = [
-    '01_production$x$x$x',
-    '02_imports$x$x$x',
-    '03_exports$x$x$x',
-    '06_stock_changes$x$x$x',
-    '07_total_primary_energy_supply$x$x$x',
-    '08_transfers$x$x$x',
-    '11_statistical_discrepancy$x$x$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_01_coal_power$18_01_01_01_subcritical',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_01_coal_power$18_01_01_02_superultracritical',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_01_coal_power$18_01_01_03_advultracritical',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_01_coal_power$18_01_01_04_ccs',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_02_gas_power$18_01_02_01_gasturbine',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_02_gas_power$18_01_02_02_combinedcycle',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_02_gas_power$18_01_02_03_ccs',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_03_oil$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_04_nuclear$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_05_hydro$18_01_05_01_large',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_05_hydro$18_01_05_02_mediumsmall',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_05_hydro$18_01_05_03_pump',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_06_biomass$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_07_geothermal$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_08_solar$18_01_08_01_utility',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_08_solar$18_01_08_02_rooftop',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_08_solar$18_01_08_03_csp',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_09_wind$18_01_09_01_onshore',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_09_wind$18_01_09_02_offshore',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_10_otherrenewable$x',
-    '19_heat_output_in_pj$19_01_chp_plants$19_01_01_coal$x',
-    '19_heat_output_in_pj$19_01_chp_plants$19_01_02_gas$x',
-    '19_heat_output_in_pj$19_01_chp_plants$19_01_03_oil$x',
-    '19_heat_output_in_pj$19_01_chp_plants$19_01_04_biomass$x',
-    '19_heat_output_in_pj$19_02_heat_plants$19_02_01_coal$x',
-    '19_heat_output_in_pj$19_02_heat_plants$19_02_02_gas$x',
-    '19_heat_output_in_pj$19_02_heat_plants$19_02_03_oil$x',
-    '19_heat_output_in_pj$19_02_heat_plants$19_02_04_biomass$x',
-    '19_heat_output_in_pj$x$x$x',
-    '08_transfers$08_02_interproduct_transfers$x$x',
-    '08_transfers$08_03_products_transferred$x$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_01_coal_power$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_02_gas_power$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_05_hydro$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_08_solar$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_09_wind$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_11_otherfuel$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$18_01_12_storage$x',
-    '18_electricity_output_in_gwh$18_01_electricity_plants$x$x',
-    '18_electricity_output_in_gwh$18_02_chp_plants$18_02_01_coal$x',
-    '18_electricity_output_in_gwh$18_02_chp_plants$18_02_02_gas$x',
-    '18_electricity_output_in_gwh$18_02_chp_plants$18_02_03_oil$x',
-    '18_electricity_output_in_gwh$18_02_chp_plants$18_02_04_biomass$x',
-    '18_electricity_output_in_gwh$18_02_chp_plants$x$x',
-    '18_electricity_output_in_gwh$x$x$x',
-    '19_heat_output_in_pj$19_01_chp_plants$x$x',
-    '19_heat_output_in_pj$19_02_heat_plants$x$x',
+not_applicable_sectors_broad_categories = [
+    '01_production',
+    '02_imports',
+    '03_exports',
+    '06_stock_changes',
+    '07_total_primary_energy_supply',
+    '08_transfers',
+    '11_statistical_discrepancy',
+    '18_electricity_output_in_gwh',
+    '19_heat_output_in_pj',
     #own use is the use of energy to produce energy (but not as a feedstock like in non energy). So we do measure it as an emission.
     '10_losses_and_own_use$10_02_transmission_and_distribution_losses$x$x',
-    '17_nonenergy_use$x$x$x'
+    '17_nonenergy_use',
+    #and all transformation sectors that arent for creating heat or electricity:
+    '09_06_gas_processing_plants',
+    '09_07_oil_refineries',
+    '09_08_coal_transformation',
+    '09_09_petrochemical_industry',
+    '09_10_biofuels_processing',
+    '09_11_charcoal_processing',
+    '09_12_nonspecified_transformation',
+    '09_13_hydrogen_transformation'
 ]
 
 #%%
 model_df_wide_copy = model_df_wide_simplified.copy()
 #drop rows where the fuel is zero emissions
-model_df_wide_simplified = model_df_wide_simplified[~model_df_wide_simplified['aperc_fuel'].isin([fuel for fuel in zero_emissions_fuels])]
-model_df_wide_simplified = model_df_wide_simplified[~model_df_wide_simplified['aperc_sector'].isin([sector for sector in not_applicable_sectors])]
+zero_emissions_fuels = []
+not_applicable_sectors = []
+
+for fuel in zero_emissions_fuels_broad_categories:
+    for fuel_ in model_df_wide_simplified['aperc_fuel'].unique():
+        if fuel in fuel_:
+            zero_emissions_fuels.append(fuel_)
+            model_df_wide_simplified = model_df_wide_simplified[(model_df_wide_simplified['aperc_fuel']!=fuel_)]
+            
+for sector in not_applicable_sectors_broad_categories:
+    for sector_ in model_df_wide_simplified['aperc_sector'].unique():
+        if sector in sector_:
+            not_applicable_sectors.append(sector_)
+            model_df_wide_simplified = model_df_wide_simplified[(model_df_wide_simplified['aperc_sector']!=sector_)]
+            
 #%%
 
 ############################
@@ -922,15 +902,68 @@ if len(prompts) >6:
 # 04_international_marine_bunkers and 05_international_aviation_bunkers mapped to 1.C.1: These are correctly mapped but would be clearer if directly mapped to 1.A.3 categories for international bunkering activities.
 
 #####################################
+# CALCULATE WEIGHTED EMISSIONS FACTORS
+
+#calc the weighted mean of the emissions factors for each fuel type as a mega simplified output:
+energy_use = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')
 
 
-
-
-
-
-
+# Melt the energy use dataframe to have a tall format for easier grouping
+energy_use_tall = energy_use.melt(
+    id_vars=['scenarios', 'economy', 'sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors', 'fuels', 'subfuels', 'subtotal_layout', 'subtotal_results'],
+    var_name='Year',
+    value_name='Value'
+)
+#make year into int
+energy_use_tall['Year'] = energy_use_tall['Year'].astype(int)
+#sdrop wehere subtotal_layout or subtotal_results is True
+energy_use_tall = energy_use_tall.loc[~(energy_use_tall['subtotal_layout'] | energy_use_tall['subtotal_results'])]
+# Average Value across all years
+average_energy_use = energy_use_tall.groupby(['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors', 'fuels', 'subfuels']).agg({'Value': 'mean'}).reset_index()
+#within transformation we need to drop where value is postiive and then set all negative values wihtin the whole df to abs value.  this may result in some values not ahving a value but that is ok, we can replace them with nan i guess
+average_energy_use.loc[(average_energy_use['sectors'] == '09_total_transformation_sector') & (average_energy_use['Value'] > 0), 'Value'] = np.nan
+average_energy_use['Value'] = average_energy_use['Value'].abs()
 #%%
-#compare the emissions factors by fuel type to the new emissions factors. since there are a range of meisisons factors for each fuel we should probably just compare the mean and median of the emissions factors for each fuel type.
+# Filter emissions factors to retain only CO2 data and remove irrelevant rows
+all_results_simple = all_results_simple[(all_results_simple['Gas'] == 'CARBON DIOXIDE') &
+                                      (all_results_simple['Sector not applicable'] == False) &
+                                      (all_results_simple['Fuel not applicable'] == False) &
+                                      (all_results_simple['No expected energy use'] == False) & (all_results_simple['GWP_type'] == 'GWP_100')].dropna(subset=['CO2e emissions factor'])
 
+# Merge emissions factors with average energy use data to calculate weighted emissions factors
+weighted_data = pd.merge(all_results_simple, average_energy_use,
+                         on=['sectors', 'sub1sectors', 'sub2sectors', 'sub3sectors', 'sub4sectors', 'fuels', 'subfuels'],
+                         how='left')
 
+# Calculate weighted emissions factor
+weighted_data['Weighted emissions factor'] = weighted_data['CO2e emissions factor'] * weighted_data['Value']
+weighted_mean = weighted_data.groupby(['fuels', 'subfuels']).agg({'Weighted emissions factor': 'sum', 'Value': 'sum'}).reset_index()
+weighted_mean['Weighted emissions factor'] = weighted_mean['Weighted emissions factor'] / weighted_mean['Value']
 
+#calc mean emissions factor which can be used where we dont have energy use data and as a check
+mean_emissions_factor = weighted_data.groupby(['fuels', 'subfuels']).agg({'CO2e emissions factor': 'mean'}).reset_index()
+mean_emissions_factor.rename(columns={'CO2e emissions factor': 'Mean emissions factor'}, inplace=True)
+# Drop unnecessary columns and finalize the output
+weighted_mean = weighted_mean[['fuels', 'subfuels', 'Weighted emissions factor']]
+
+emissions_factors_final = pd.merge(mean_emissions_factor, weighted_mean, on=['fuels', 'subfuels'], how='outer')
+
+#and join energy_use[['fuels', 'subfuels']] to emissions_factors_final to get get rows that would be missing. we can then set the value to nan for those
+emissions_factors_final = pd.merge(emissions_factors_final, energy_use[['fuels', 'subfuels']].drop_duplicates(), on=['fuels', 'subfuels'], how='outer')
+
+#where weightedemisisons not available, set to mean emissions factor
+emissions_factors_final['Weighted emissions factor'] = emissions_factors_final['Weighted emissions factor'].fillna(emissions_factors_final['Mean emissions factor'])
+
+#rename weighted to CO2e emissions factor, set unit to Mt/PJ and drop mean emissions factor, and set Gas to Carbon Dioxide
+emissions_factors_final.rename(columns={'Weighted emissions factor': 'CO2e emissions factor'}, inplace=True)
+emissions_factors_final['Unit'] = 'Mt/PJ'
+emissions_factors_final['Gas'] = 'CARBON DIOXIDE'
+emissions_factors_final.drop(columns=['Mean emissions factor'], inplace=True)
+
+#order the data by fuels and subfuels
+emissions_factors_final.sort_values(['fuels', 'subfuels'], inplace=True)
+#now where 
+# Display the result
+#save!
+emissions_factors_final.to_csv(f'../output_data/9th_edition_co2_emissions_factors_by_fuel_energy_weighted_{filedate}.csv', index=False)
+#%%
