@@ -17,7 +17,7 @@ new_emissions_factors_ipcc = pd.read_csv(f'../output_data/{file}')
 
 #%%
 # And load in model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv') to weight our new emissions factors by the energy use of each fuel type, so we can get a more accurate comparison of the emissions factors by fuel type.
-model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')#'scenarios', 'economy', 'sectors', 'sub1sectors', 'sub2sectors',
+model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241101.csv')#'scenarios', 'economy', 'sectors', 'sub1sectors', 'sub2sectors',
 #    'sub3sectors', 'sub4sectors', 'fuels', 'subfuels', 'subtotal_layout'
 #drop where subtotal_layout is True
 model_df_wide_original = model_df_wide_original.loc[model_df_wide_original['subtotal_layout'] == False]

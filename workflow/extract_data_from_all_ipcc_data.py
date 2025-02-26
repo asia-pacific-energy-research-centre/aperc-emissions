@@ -10,7 +10,7 @@ from datetime import datetime
 import shutil
 import utility_functions as utils
 
-model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241029.csv')
+model_df_wide_original = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241101.csv')
 emissions_factors_ipcc = pd.read_csv('../input_data/EFDB_output (all unfcc energy sector emissions factors).csv')#this was downlaoded from here https://www.ipcc-nggip.iges.or.jp/EFDB/find_ef.php?ipcc_code=1&ipcc_level=0 < that is, the ipccc emissions factors database for the IPCC 2006 category: 1 - Energy.
 gwp_dict_100_years = {'CARBON DIOXIDE': 1, 'METHANE': 32, 'NITROUS OXIDE': 298}
 gwp_dict_20_years = {'CARBON DIOXIDE': 1, 'METHANE': 86, 'NITROUS OXIDE': 268}# https://chatgpt.com/share/6710a2c2-50e0-8000-8234-70d171ee9ed4 - why i have these values
@@ -905,7 +905,7 @@ if len(prompts) >6:
 # CALCULATE WEIGHTED EMISSIONS FACTORS
 
 #calc the weighted mean of the emissions factors for each fuel type as a mega simplified output:
-energy_use = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241023.csv')
+energy_use = pd.read_csv('../input_data/merged_file_energy_00_APEC_20241101.csv')
 
 
 # Melt the energy use dataframe to have a tall format for easier grouping
