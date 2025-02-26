@@ -125,6 +125,7 @@ not_applicable_sectors_broad_categories = [
     '06_stock_changes',
     '07_total_primary_energy_supply',
     '08_transfers',
+    '08_transfers$08_03_products_transferred$x$x',
     '11_statistical_discrepancy',
     '18_electricity_output_in_gwh',
     '19_heat_output_in_pj',
